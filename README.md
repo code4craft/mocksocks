@@ -1,4 +1,4 @@
-monkeysocks
+mocksocks
 --------
 > A socks proxy in Java. It can be used to record network traffics and replay them for tests. 
 
@@ -9,3 +9,6 @@ Record network traffics and replay them for tests. Then you can run tests isolat
 ### Ways
 
 Set global socks proxy for Java.
+
+### Planning
+

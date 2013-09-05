@@ -19,5 +19,6 @@
     </developers>
     <modules>
         <module>./monkeysocks-recorder</module>
+        <module>dproxy</module>
     </modules>
 </project>
