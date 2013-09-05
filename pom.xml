@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.dianping</groupId>
+    <artifactId>monkeysocks</artifactId>
+    <packaging>pom</packaging>
+    <version>0.0.2-SNAPSHOT</version>
+    <name>monkey-socks</name>
+    <url>https://github.com/code4craft/monkeysocks</url>
+
+    <developers>
+        <developer>
+            <name>yihua.huang</name>
+            <email>yihua.huang@dianping.com</email>
+        </developer>
+    </developers>
+    <modules>
+        <module>./monkeysocks-recorder</module>
+    </modules>
+</project>
