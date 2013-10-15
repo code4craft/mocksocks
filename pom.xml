@@ -20,5 +20,6 @@
     <modules>
         <module>./monkeysocks-recorder</module>
         <module>dproxy</module>
+        <module>mocksocks-junit</module>
     </modules>
 </project>
