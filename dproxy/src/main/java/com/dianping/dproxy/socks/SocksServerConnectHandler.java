@@ -42,20 +42,29 @@ public class SocksServerConnectHandler extends SimpleChannelUpstreamHandler {
 				inboundChannel.setReadable(false);
 
 				// Start the connection attempt.
-				ClientBootstrap cb = new ClientBootstrap(cf);
+				final ClientBootstrap cb = new ClientBootstrap(cf);
+                cb.setOption("keepAlive",true);
+                cb.setOption("tcpNoDelay",true);
+                cb.setPipelineFactory(new ChannelPipelineFactory() {
+                    @Override
+                    public ChannelPipeline getPipeline() throws Exception {
+                        ChannelPipeline pipeline = Channels.pipeline();
+                        pipeline.addLast("outboundChannel", new OutboundHandler(inboundChannel, "out"));
+                        return pipeline;
+                    }
+                });
 
-				cb.getPipeline().addLast("outboundChannel", new OutboundHandler(e.getChannel(), "out"));
 				ChannelFuture f = cb
 						.connect(new InetSocketAddress(socksCmdRequest.getHost(), socksCmdRequest.getPort()));
 
 				outboundChannel = f.getChannel();
-				ctx.getPipeline().addLast("outboundChannel", new OutboundHandler(outboundChannel, "in"));
                 ctx.getPipeline().remove(getName());
 				f.addListener(new ChannelFutureListener() {
 					public void operationComplete(ChannelFuture future) throws Exception {
 						if (future.isSuccess()) {
 							// Connection attempt succeeded:
 							// Begin to accept incoming traffic.
+                            inboundChannel.getPipeline().addLast("inboundChannel", new OutboundHandler(outboundChannel, "in"));
 							inboundChannel.write(new SocksCmdResponse(SocksMessage.CmdStatus.SUCCESS, socksCmdRequest
 									.getAddressType()));
 							inboundChannel.setReadable(true);
@@ -91,27 +100,11 @@ public class SocksServerConnectHandler extends SimpleChannelUpstreamHandler {
 
 		@Override
 		public void messageReceived(ChannelHandlerContext ctx, final MessageEvent e) throws Exception {
-			ChannelBuffer msg = (ChannelBuffer) e.getMessage();
-			// System.out.println("<<< " + ChannelBuffers.hexDump(msg));
+			final ChannelBuffer msg = (ChannelBuffer) e.getMessage();
 			synchronized (trafficLock) {
-				inboundChannel.write(msg);
-				// If inboundChannel is saturated, do not read until notified in
-				// HexDumpProxyInboundHandler.channelInterestChanged().
-				if (!inboundChannel.isWritable()) {
-					e.getChannel().setReadable(false);
-				}
-			}
-		}
+                inboundChannel.write(msg);
 
-		@Override
-		public void channelInterestChanged(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
-			// If outboundChannel is not saturated anymore, continue accepting
-			// the incoming traffic from the inboundChannel.
-			synchronized (trafficLock) {
-				if (e.getChannel().isWritable()) {
-					inboundChannel.setReadable(true);
-				}
-			}
+            }
 		}
 
 		@Override

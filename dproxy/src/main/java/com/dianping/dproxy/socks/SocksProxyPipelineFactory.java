@@ -5,7 +5,6 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.socket.ClientSocketChannelFactory;
 import org.jboss.netty.handler.codec.socks.SocksInitRequestDecoder;
-import org.jboss.netty.handler.codec.socks.SocksMessageEncoder;
 
 /**
  * @author yihua.huang@dianping.com
