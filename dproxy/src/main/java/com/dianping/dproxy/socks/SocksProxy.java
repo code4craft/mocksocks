@@ -30,7 +30,7 @@ public class SocksProxy {
                 new SocksProxyPipelineFactory(cf));
 
         // Start up the server.
-        sb.bind(new InetSocketAddress(1030));
+        sb.bind(new InetSocketAddress(1080));
     }
 
     public static void main(String[] args) {

@@ -34,54 +34,43 @@ public class SocksServerConnectHandler extends SimpleChannelUpstreamHandler {
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-		if (e.getMessage() instanceof SocksCmdRequest) {
-			final SocksCmdRequest socksCmdRequest = (SocksCmdRequest) e.getMessage();
-			if (socksCmdRequest.getCmdType() == SocksMessage.CmdType.CONNECT) {
+		final SocksCmdRequest socksCmdRequest = (SocksCmdRequest) e.getMessage();
+		final Channel inboundChannel = e.getChannel();
+		inboundChannel.setReadable(false);
 
-				final Channel inboundChannel = e.getChannel();
-				inboundChannel.setReadable(false);
-
-				// Start the connection attempt.
-				final ClientBootstrap cb = new ClientBootstrap(cf);
-                cb.setOption("keepAlive",true);
-                cb.setOption("tcpNoDelay",true);
-                cb.setPipelineFactory(new ChannelPipelineFactory() {
-                    @Override
-                    public ChannelPipeline getPipeline() throws Exception {
-                        ChannelPipeline pipeline = Channels.pipeline();
-                        //外部server数据转发到client
-                        pipeline.addLast("outboundChannel", new OutboundHandler(inboundChannel, "out"));
-                        return pipeline;
-                    }
-                });
-
-				ChannelFuture f = cb
-						.connect(new InetSocketAddress(socksCmdRequest.getHost(), socksCmdRequest.getPort()));
-
-				outboundChannel = f.getChannel();
-                ctx.getPipeline().remove(getName());
-				f.addListener(new ChannelFutureListener() {
-					public void operationComplete(ChannelFuture future) throws Exception {
-						if (future.isSuccess()) {
-							// Connection attempt succeeded:
-							// Begin to accept incoming traffic.
-                            //client数据转发到外部server
-                            inboundChannel.getPipeline().addLast("inboundChannel", new OutboundHandler(outboundChannel, "in"));
-							inboundChannel.write(new SocksCmdResponse(SocksMessage.CmdStatus.SUCCESS, socksCmdRequest
-									.getAddressType()));
-							inboundChannel.setReadable(true);
-						} else {
-							// Close the connection if the connection attempt
-							// has
-							// failed.
-							inboundChannel.write(new SocksCmdResponse(SocksMessage.CmdStatus.FAILURE, socksCmdRequest
-                                    .getAddressType()));
-							inboundChannel.close();
-						}
-					}
-				});
+		// Start the connection attempt.
+		final ClientBootstrap cb = new ClientBootstrap(cf);
+		cb.setOption("keepAlive", true);
+		cb.setOption("tcpNoDelay", true);
+		cb.setPipelineFactory(new ChannelPipelineFactory() {
+			@Override
+			public ChannelPipeline getPipeline() throws Exception {
+				ChannelPipeline pipeline = Channels.pipeline();
+				// 外部server数据转发到client
+				pipeline.addLast("outboundChannel", new OutboundHandler(inboundChannel, "out"));
+				return pipeline;
 			}
-		}
+		});
+
+		ChannelFuture f = cb.connect(new InetSocketAddress(socksCmdRequest.getHost(), socksCmdRequest.getPort()));
+
+		outboundChannel = f.getChannel();
+		ctx.getPipeline().remove(getName());
+		f.addListener(new ChannelFutureListener() {
+			public void operationComplete(ChannelFuture future) throws Exception {
+				if (future.isSuccess()) {
+					// client数据转发到外部server
+					inboundChannel.getPipeline().addLast("inboundChannel", new OutboundHandler(outboundChannel, "in"));
+					inboundChannel.write(new SocksCmdResponse(SocksMessage.CmdStatus.SUCCESS, socksCmdRequest
+							.getAddressType()));
+					inboundChannel.setReadable(true);
+				} else {
+					inboundChannel.write(new SocksCmdResponse(SocksMessage.CmdStatus.FAILURE, socksCmdRequest
+							.getAddressType()));
+					inboundChannel.close();
+				}
+			}
+		});
 	}
 
 	@Override
@@ -104,9 +93,9 @@ public class SocksServerConnectHandler extends SimpleChannelUpstreamHandler {
 		public void messageReceived(ChannelHandlerContext ctx, final MessageEvent e) throws Exception {
 			final ChannelBuffer msg = (ChannelBuffer) e.getMessage();
 			synchronized (trafficLock) {
-                inboundChannel.write(msg);
+				inboundChannel.write(msg);
 
-            }
+			}
 		}
 
 		@Override
