@@ -49,6 +49,7 @@ public class SocksServerConnectHandler extends SimpleChannelUpstreamHandler {
                     @Override
                     public ChannelPipeline getPipeline() throws Exception {
                         ChannelPipeline pipeline = Channels.pipeline();
+                        //外部server数据转发到client
                         pipeline.addLast("outboundChannel", new OutboundHandler(inboundChannel, "out"));
                         return pipeline;
                     }
@@ -64,6 +65,7 @@ public class SocksServerConnectHandler extends SimpleChannelUpstreamHandler {
 						if (future.isSuccess()) {
 							// Connection attempt succeeded:
 							// Begin to accept incoming traffic.
+                            //client数据转发到外部server
                             inboundChannel.getPipeline().addLast("inboundChannel", new OutboundHandler(outboundChannel, "in"));
 							inboundChannel.write(new SocksCmdResponse(SocksMessage.CmdStatus.SUCCESS, socksCmdRequest
 									.getAddressType()));

@@ -39,19 +39,22 @@ public final class SocksServerHandler extends SimpleChannelUpstreamHandler {
         SocksRequest socksRequest = (SocksRequest) e.getMessage();
         switch (socksRequest.getSocksRequestType()) {
 		case INIT:
+            //添加cmd解码器
             ctx.getPipeline().addFirst(SocksCmdRequestDecoder.getName(), new SocksCmdRequestDecoder());
+            //简单起见，无需认证
             ctx.getChannel().write(new SocksInitResponse(SocksMessage.AuthScheme.NO_AUTH));
             break;
 		case AUTH:
             ctx.getPipeline().addFirst(SocksCmdRequestDecoder.getName(), new SocksCmdRequestDecoder());
+            //直接成功
             ctx.getChannel().write(new SocksAuthResponse(SocksMessage.AuthStatus.SUCCESS));
             break;
 		case CMD:
             SocksCmdRequest req = (SocksCmdRequest) socksRequest;
             if (req.getCmdType() == SocksMessage.CmdType.CONNECT) {
+                //添加处理连接的handler
                 ctx.getPipeline().addLast(SocksServerConnectHandler.getName(), new SocksServerConnectHandler(cf));
                 ctx.getPipeline().remove(this);
-//                ctx.fireChannelRead(socksRequest);
             } else {
                 ctx.getChannel().close();
             }

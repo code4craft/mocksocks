@@ -26,12 +26,11 @@ public class SocksProxy {
         ClientSocketChannelFactory cf =
                 new NioClientSocketChannelFactory(executor, executorWorker);
 
-
         sb.setPipelineFactory(
                 new SocksProxyPipelineFactory(cf));
 
         // Start up the server.
-        sb.bind(new InetSocketAddress(40310));
+        sb.bind(new InetSocketAddress(1030));
     }
 
     public static void main(String[] args) {
