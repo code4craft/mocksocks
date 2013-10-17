@@ -1,4 +1,4 @@
-package com.dianping.dproxy;
+package com.dianping.mocksocks.proxy;
 
 /**
  * @author yihua.huang@dianping.com

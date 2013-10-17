@@ -1,5 +1,6 @@
-package com.dianping.dproxy.socks;
+package com.dianping.mocksocks.proxy.socks;
 
+import com.dianping.mocksocks.proxy.SocksProxyPipelineFactory;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.socket.ClientSocketChannelFactory;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;

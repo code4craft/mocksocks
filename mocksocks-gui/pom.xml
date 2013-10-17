@@ -9,16 +9,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>dproxy</artifactId>
-
-    <dependencies>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty</artifactId>
-            <version>3.7.0.Final</version>
-        </dependency>
-
-    </dependencies>
+    <groupId>com.dianping</groupId>
+    <artifactId>mocksocks-gui</artifactId>
+    <version>0.0.2-SNAPSHOT</version>
 
 
 </project>

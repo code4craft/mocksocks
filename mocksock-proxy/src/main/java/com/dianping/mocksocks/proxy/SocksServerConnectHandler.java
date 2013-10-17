@@ -1,4 +1,4 @@
-package com.dianping.dproxy.socks;
+package com.dianping.mocksocks.proxy.socks;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;

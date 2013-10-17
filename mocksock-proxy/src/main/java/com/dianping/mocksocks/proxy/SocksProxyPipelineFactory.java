@@ -1,5 +1,6 @@
-package com.dianping.dproxy.socks;
+package com.dianping.mocksocks.proxy.socks;
 
+import com.dianping.mocksocks.proxy.SocksServerHandler;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
@@ -21,7 +22,7 @@ public class SocksProxyPipelineFactory implements ChannelPipelineFactory {
 	public ChannelPipeline getPipeline() throws Exception {
 		ChannelPipeline pipeline = Channels.pipeline();
         pipeline.addLast(SocksInitRequestDecoder.getName(),new SocksInitRequestDecoder());
-        pipeline.addLast(SocksMessageEncoder.getName(),new SocksMessageEncoder());
+        pipeline.addLast(com.dianping.mocksocks.proxy.socks.SocksMessageEncoder.getName(),new com.dianping.mocksocks.proxy.socks.SocksMessageEncoder());
         pipeline.addLast(SocksServerHandler.getName(),new SocksServerHandler(cf));
 		return pipeline;
 	}

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.dianping.dproxy.socks;
+package com.dianping.mocksocks.proxy.socks;
 
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.MessageEvent;
@@ -53,7 +53,7 @@ public final class SocksServerHandler extends SimpleChannelUpstreamHandler {
             SocksCmdRequest req = (SocksCmdRequest) socksRequest;
             if (req.getCmdType() == SocksMessage.CmdType.CONNECT) {
                 //添加处理连接的handler
-                ctx.getPipeline().addLast(SocksServerConnectHandler.getName(), new SocksServerConnectHandler(cf));
+                ctx.getPipeline().addLast(com.dianping.mocksocks.proxy.socks.SocksServerConnectHandler.getName(), new com.dianping.mocksocks.proxy.socks.SocksServerConnectHandler(cf));
                 ctx.getPipeline().remove(this);
             } else {
                 ctx.getChannel().close();

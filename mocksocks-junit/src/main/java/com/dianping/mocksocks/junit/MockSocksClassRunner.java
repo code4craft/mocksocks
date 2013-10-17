@@ -1,6 +1,6 @@
 package com.dianping.mocksocks.junit;
 
-import com.dianping.dproxy.Proxy;
+import com.dianping.mocksocks.proxy.Proxy;
 import org.junit.internal.runners.InitializationError;
 import org.junit.internal.runners.JUnit4ClassRunner;
 import org.junit.runner.notification.RunNotifier;

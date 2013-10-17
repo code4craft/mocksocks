@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.dianping</groupId>
-    <artifactId>monkeysocks</artifactId>
+    <artifactId>mocksocks</artifactId>
     <packaging>pom</packaging>
     <version>0.0.2-SNAPSHOT</version>
     <name>monkey-socks</name>
@@ -19,7 +19,8 @@
     </developers>
     <modules>
         <module>./monkeysocks-recorder</module>
-        <module>dproxy</module>
+        <module>mocksock-proxy</module>
         <module>mocksocks-junit</module>
+        <module>mocksocks-gui</module>
     </modules>
 </project>
