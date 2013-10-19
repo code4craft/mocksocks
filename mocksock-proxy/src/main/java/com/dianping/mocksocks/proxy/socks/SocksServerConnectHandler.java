@@ -3,6 +3,7 @@ package com.dianping.mocksocks.proxy.socks;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
+import org.jboss.netty.channel.*;
 import org.jboss.netty.channel.socket.ClientSocketChannelFactory;
 import org.jboss.netty.handler.codec.socks.SocksCmdRequest;
 import org.jboss.netty.handler.codec.socks.SocksCmdResponse;
@@ -12,7 +13,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
-import java.nio.channels.Channels;
 
 /**
  * @author yihua.huang@dianping.com
