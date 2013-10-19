@@ -1,9 +1,9 @@
 package com.dianping.mocksocks.client.proxy;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.nio.channels.spi.SelectorProvider;
@@ -24,8 +24,178 @@ public class SocksProxySocketChannel extends SocketChannel {
 
 	@Override
 	public Socket socket() {
-		return null;
+		return new SocketWrapper(innerSocketChannel.socket(), remote);
 	}
+
+	private static class SocketWrapper extends Socket {
+
+		private Socket innerSocket;
+
+		private SocketAddress remoteAddress;
+
+		public SocketWrapper(Socket innerSocket, SocketAddress remoteAddress) {
+			this.innerSocket = innerSocket;
+			this.remoteAddress = remoteAddress;
+		}
+
+		@Override
+		public void connect(SocketAddress endpoint, int timeout) throws IOException {
+			innerSocket.connect(endpoint, timeout);
+		}
+
+		@Override
+		public void bind(SocketAddress bindpoint) throws IOException {
+			innerSocket.bind(bindpoint);
+		}
+
+		@Override
+		public OutputStream getOutputStream() throws IOException {
+			return innerSocket.getOutputStream();
+		}
+
+		@Override
+		public InputStream getInputStream() throws IOException {
+			return innerSocket.getInputStream();
+		}
+
+		@Override
+		public boolean getKeepAlive() throws SocketException {
+			return innerSocket.getKeepAlive();
+		}
+
+		@Override
+		public boolean getOOBInline() throws SocketException {
+			return innerSocket.getOOBInline();
+		}
+
+		@Override
+		public boolean getReuseAddress() throws SocketException {
+			return innerSocket.getReuseAddress();
+		}
+
+		@Override
+		public boolean getTcpNoDelay() throws SocketException {
+			return innerSocket.getTcpNoDelay();
+		}
+
+		@Override
+		public InetAddress getLocalAddress() {
+			return innerSocket.getLocalAddress();
+		}
+
+		@Override
+		public int getLocalPort() {
+			return innerSocket.getLocalPort();
+		}
+
+		@Override
+		public int getPort() {
+			return innerSocket.getPort();
+		}
+
+		@Override
+		public synchronized int getReceiveBufferSize() throws SocketException {
+			return innerSocket.getReceiveBufferSize();
+		}
+
+		@Override
+		public synchronized int getSendBufferSize() throws SocketException {
+			return innerSocket.getSendBufferSize();
+		}
+
+		@Override
+		public int getSoLinger() throws SocketException {
+			return innerSocket.getSoLinger();
+		}
+
+		@Override
+		public synchronized int getSoTimeout() throws SocketException {
+			return innerSocket.getSoTimeout();
+		}
+
+		@Override
+		public int getTrafficClass() throws SocketException {
+			return innerSocket.getTrafficClass();
+		}
+
+		@Override
+		public SocketAddress getLocalSocketAddress() {
+			return innerSocket.getLocalSocketAddress();
+		}
+
+		@Override
+		public SocketAddress getRemoteSocketAddress() {
+			return innerSocket.getRemoteSocketAddress();
+		}
+
+		@Override
+		public SocketChannel getChannel() {
+			return innerSocket.getChannel();
+		}
+
+		@Override
+		public void setKeepAlive(boolean on) throws SocketException {
+			innerSocket.setKeepAlive(on);
+		}
+
+		@Override
+		public void setOOBInline(boolean on) throws SocketException {
+			innerSocket.setOOBInline(on);
+		}
+
+		@Override
+		public void setPerformancePreferences(int connectionTime, int latency, int bandwidth) {
+			innerSocket.setPerformancePreferences(connectionTime, latency, bandwidth);
+		}
+
+		@Override
+		public synchronized void setReceiveBufferSize(int size) throws SocketException {
+			innerSocket.setReceiveBufferSize(size);
+		}
+
+		@Override
+		public void setReuseAddress(boolean on) throws SocketException {
+			innerSocket.setReuseAddress(on);
+		}
+
+		@Override
+		public synchronized void setSendBufferSize(int size) throws SocketException {
+			innerSocket.setSendBufferSize(size);
+		}
+
+		@Override
+		public void setSoLinger(boolean on, int linger) throws SocketException {
+			innerSocket.setSoLinger(on, linger);
+		}
+
+		@Override
+		public synchronized void setSoTimeout(int timeout) throws SocketException {
+			innerSocket.setSoTimeout(timeout);
+		}
+
+		@Override
+		public void setTcpNoDelay(boolean on) throws SocketException {
+			innerSocket.setTcpNoDelay(on);
+		}
+
+		@Override
+		public void setTrafficClass(int tc) throws SocketException {
+			innerSocket.setTrafficClass(tc);
+		}
+
+		@Override
+		public int hashCode() {
+			return innerSocket.hashCode();
+		}
+
+		@Override
+		public InetAddress getInetAddress() {
+			if (remoteAddress instanceof InetSocketAddress) {
+				return ((InetSocketAddress) remoteAddress).getAddress();
+			}
+			return null;
+		}
+	};
 
 	@Override
 	public boolean isConnected() {
@@ -40,15 +210,14 @@ public class SocksProxySocketChannel extends SocketChannel {
 	@Override
 	public boolean connect(SocketAddress remote) throws IOException {
 		this.remote = remote;
-        System.out.println("connect to "+remote);
-        SocketAddress socksProxy = getSocksProxy();
-        if (socksProxy == null) {
+		System.out.println("connect to " + remote);
+		SocketAddress socksProxy = getSocksProxy();
+		if (socksProxy == null) {
 			return innerSocketChannel.connect(remote);
 		} else {
-            innerSocketChannel.connect(socksProxy);
-            System.out.println("connect to "+remote);
-            //SEND REQUEST
-            return true;
+			innerSocketChannel.connect(socksProxy);
+			System.out.println("connect to " + remote);
+			return true;
 		}
 	}
 
@@ -94,11 +263,11 @@ public class SocksProxySocketChannel extends SocketChannel {
 
 	@Override
 	protected void implCloseSelectableChannel() throws IOException {
-		// TODO
+
 	}
 
 	@Override
 	protected void implConfigureBlocking(boolean block) throws IOException {
-		// TODO
+
 	}
 }
