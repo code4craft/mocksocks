@@ -40,10 +40,13 @@ public class SocksProxySocketChannel extends SocketChannel {
 	@Override
 	public boolean connect(SocketAddress remote) throws IOException {
 		this.remote = remote;
-		if (getSocksProxy() == null) {
+        System.out.println("connect to "+remote);
+        SocketAddress socksProxy = getSocksProxy();
+        if (socksProxy == null) {
 			return innerSocketChannel.connect(remote);
 		} else {
-            innerSocketChannel.connect(getSocksProxy());
+            innerSocketChannel.connect(socksProxy);
+            System.out.println("connect to "+remote);
             //SEND REQUEST
             return true;
 		}

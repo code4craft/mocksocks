@@ -10,7 +10,7 @@ public class SocksAgent {
     public static void premain(String agentArgs, Instrumentation inst){
         System.setProperty("socksProxyHost", "127.0.0.1");
         System.setProperty("socksProxyPort", "13720");
-        System.setProperty("java.nio.channels.spi.SelectorProvider", "com.dianping.mocksocks.client.proxy.SocksProxySocketChannel");
+        System.setProperty("java.nio.channels.spi.SelectorProvider", "com.dianping.mocksocks.client.proxy.SocksProxySelectorProvider");
         //fot nio
         inst.addTransformer(new SocksChannelTransformer());
     }
