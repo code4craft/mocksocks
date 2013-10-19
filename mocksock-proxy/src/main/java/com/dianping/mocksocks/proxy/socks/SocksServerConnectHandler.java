@@ -3,13 +3,16 @@ package com.dianping.mocksocks.proxy.socks;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
-import org.jboss.netty.channel.*;
 import org.jboss.netty.channel.socket.ClientSocketChannelFactory;
 import org.jboss.netty.handler.codec.socks.SocksCmdRequest;
 import org.jboss.netty.handler.codec.socks.SocksCmdResponse;
 import org.jboss.netty.handler.codec.socks.SocksMessage;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.InetSocketAddress;
+import java.nio.channels.Channels;
 
 /**
  * @author yihua.huang@dianping.com
@@ -22,15 +25,25 @@ public class SocksServerConnectHandler extends SimpleChannelUpstreamHandler {
 		return name;
 	}
 
+    private static PrintWriter printWriter;
+
 	private final ClientSocketChannelFactory cf;
 
 	private volatile Channel outboundChannel;
 
 	final Object trafficLock = new Object();
 
+    static {
+        try {
+            printWriter = new PrintWriter(new FileWriter("/data/socks/c.log"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 	public SocksServerConnectHandler(ClientSocketChannelFactory cf) {
 		this.cf = cf;
-	}
+    }
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
@@ -47,12 +60,14 @@ public class SocksServerConnectHandler extends SimpleChannelUpstreamHandler {
 			public ChannelPipeline getPipeline() throws Exception {
 				ChannelPipeline pipeline = Channels.pipeline();
 				// 外部server数据转发到client
-				pipeline.addLast("outboundChannel", new OutboundHandler(inboundChannel, "out"));
+				pipeline.addLast("outboundChannel", new OutboundHandler(inboundChannel, socksCmdRequest.getHost()
+						+ " : " + socksCmdRequest.getPort() + "<<<"));
 				return pipeline;
 			}
 		});
 
 		ChannelFuture f = cb.connect(new InetSocketAddress(socksCmdRequest.getHost(), socksCmdRequest.getPort()));
+        System.out.println("connect to "+socksCmdRequest.getHost()+" : "+socksCmdRequest.getPort());
 
 		outboundChannel = f.getChannel();
 		ctx.getPipeline().remove(getName());
@@ -60,7 +75,7 @@ public class SocksServerConnectHandler extends SimpleChannelUpstreamHandler {
 			public void operationComplete(ChannelFuture future) throws Exception {
 				if (future.isSuccess()) {
 					// client数据转发到外部server
-					inboundChannel.getPipeline().addLast("inboundChannel", new OutboundHandler(outboundChannel, "in"));
+					inboundChannel.getPipeline().addLast("inboundChannel", new OutboundHandler(outboundChannel, socksCmdRequest.getHost()+" : "+socksCmdRequest.getPort()+">>>"));
 					inboundChannel.write(new SocksCmdResponse(SocksMessage.CmdStatus.SUCCESS, socksCmdRequest
 							.getAddressType()));
 					inboundChannel.setReadable(true);
@@ -94,8 +109,8 @@ public class SocksServerConnectHandler extends SimpleChannelUpstreamHandler {
 			final ChannelBuffer msg = (ChannelBuffer) e.getMessage();
 			synchronized (trafficLock) {
 				inboundChannel.write(msg);
-
-			}
+                printWriter.println(name + ChannelBuffers.hexDump(msg));
+            }
 		}
 
 		@Override

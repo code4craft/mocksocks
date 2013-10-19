@@ -18,9 +18,10 @@
         </developer>
     </developers>
     <modules>
-        <module>./monkeysocks-recorder</module>
         <module>mocksock-proxy</module>
         <module>mocksocks-junit</module>
         <module>mocksocks-gui</module>
+        <module>mocksocks-client</module>
+        <module>mocksocks-sample</module>
     </modules>
 </project>

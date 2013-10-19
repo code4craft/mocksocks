@@ -26,8 +26,8 @@ public class MockSocksClassRunner extends JUnit4ClassRunner {
 
     private static void startProxy(String cacheFileName) {
         Proxy proxy = null;
-        proxy.start();
-        proxy.loadCache(cacheFileName);
+//        proxy.start();
+//        proxy.loadCache(cacheFileName);
     }
 
 	public static void init(Object object) {

@@ -1,6 +1,5 @@
 package com.dianping.mocksocks.proxy.socks;
 
-import com.dianping.mocksocks.proxy.SocksProxyPipelineFactory;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.socket.ClientSocketChannelFactory;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
@@ -31,7 +30,7 @@ public class SocksProxy {
                 new SocksProxyPipelineFactory(cf));
 
         // Start up the server.
-        sb.bind(new InetSocketAddress(1080));
+        sb.bind(new InetSocketAddress(13720));
     }
 
     public static void main(String[] args) {
