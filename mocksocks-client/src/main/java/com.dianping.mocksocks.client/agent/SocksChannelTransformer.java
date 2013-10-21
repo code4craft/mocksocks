@@ -15,7 +15,7 @@ import java.security.ProtectionDomain;
 public class SocksChannelTransformer implements ClassFileTransformer {
     @Override
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
-        System.out.println(className);
+        System.out.println(className+" "+loader.getClass());
         ClassPool cp = ClassPool.getDefault();
         byte[] b = classfileBuffer;
         String name = className.replace("/", ".");

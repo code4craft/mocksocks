@@ -13,10 +13,16 @@ import java.nio.channels.spi.SelectorProvider;
  */
 public class SocksProxySelectorProvider extends SelectorProvider {
 
-	private SelectorProvider innerProvider;
+	private static volatile SelectorProvider innerProvider;
 
 	public SocksProxySelectorProvider() {
-		innerProvider = sun.nio.ch.DefaultSelectorProvider.create();
+		if (innerProvider == null) {
+			synchronized (SocksProxySelectorProvider.class) {
+				if (innerProvider == null) {
+					innerProvider = sun.nio.ch.DefaultSelectorProvider.create();
+				}
+			}
+		}
 	}
 
 	@Override
@@ -24,7 +30,7 @@ public class SocksProxySelectorProvider extends SelectorProvider {
 		return innerProvider.openDatagramChannel();
 	}
 
-    @Override
+	@Override
 	public Pipe openPipe() throws IOException {
 		return innerProvider.openPipe();
 	}
