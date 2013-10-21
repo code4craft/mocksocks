@@ -15,11 +15,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.dianping</groupId>
-            <artifactId>mocksocks-client</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.jboss.netty</groupId>
             <artifactId>netty</artifactId>
             <version>3.2.9.Final</version>

@@ -246,9 +246,9 @@ public class SocksProxySocketChannel extends SocketChannel implements SelChImpl 
 	@Override
 	public boolean connect(SocketAddress remote) throws IOException {
 		this.remote = remote;
-		System.out.println("connect to " + remote);
 		SocketAddress socksProxy = getSocksProxy();
-		if (socksProxy == null) {
+        System.out.println("connect to " + socksProxy);
+        if (socksProxy == null) {
 			return innerSocketChannel.connect(remote);
 		} else {
 			System.out.println("connect to " + remote);
