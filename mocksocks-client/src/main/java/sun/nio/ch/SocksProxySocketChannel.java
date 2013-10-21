@@ -12,11 +12,11 @@ import java.nio.channels.spi.SelectorProvider;
 /**
  * @author yihua.huang@dianping.com
  */
-public class SocksProxySocketChannel extends SocketChannelImpl  {
+public class SocksProxySocketChannel extends SocketChannelImpl {
 
 	public SocksProxySocketChannel(SelectorProvider provider, SocketChannel innerSocketChannel) throws IOException {
 		super(provider);
-		this.innerSocketChannel = (sun.nio.ch.SocketChannelImpl)innerSocketChannel;
+		this.innerSocketChannel = (sun.nio.ch.SocketChannelImpl) innerSocketChannel;
 	}
 
 	private sun.nio.ch.SocketChannelImpl innerSocketChannel;
@@ -50,15 +50,15 @@ public class SocksProxySocketChannel extends SocketChannelImpl  {
 
 	@Override
 	public void translateAndSetInterestOps(int i, SelectionKeyImpl selectionKey) {
-        innerSocketChannel.translateAndSetReadyOps(i, selectionKey);
+		innerSocketChannel.translateAndSetReadyOps(i, selectionKey);
 	}
 
 	@Override
 	public void kill() throws IOException {
-        innerSocketChannel.kill();
+		innerSocketChannel.kill();
 	}
 
-	private static class SocketWrapper extends Socket {
+	private class SocketWrapper extends Socket {
 
 		private SocketChannel innerSocketChannel;
 
@@ -71,7 +71,12 @@ public class SocksProxySocketChannel extends SocketChannelImpl  {
 
 		@Override
 		public void connect(SocketAddress endpoint, int timeout) throws IOException {
-			innerSocketChannel.socket().connect(endpoint, timeout);
+            SocksProxySocketChannel.this.connect(endpoint);
+		}
+
+		@Override
+		public void connect(SocketAddress endpoint) throws IOException {
+			connect(endpoint, 0);
 		}
 
 		@Override
@@ -242,7 +247,7 @@ public class SocksProxySocketChannel extends SocketChannelImpl  {
 	public boolean connect(SocketAddress remote) throws IOException {
 		this.remote = remote;
 		SocketAddress socksProxy = getSocksProxy();
-        if (socksProxy == null) {
+		if (socksProxy == null) {
 			return innerSocketChannel.connect(remote);
 		} else {
 			return innerSocketChannel.connect(socksProxy);
@@ -291,56 +296,56 @@ public class SocksProxySocketChannel extends SocketChannelImpl  {
 
 	@Override
 	protected void implCloseSelectableChannel() throws IOException {
-        innerSocketChannel.implCloseSelectableChannel();
+		innerSocketChannel.implCloseSelectableChannel();
 	}
 
 	@Override
 	protected void implConfigureBlocking(boolean block) throws IOException {
-        innerSocketChannel.implConfigureBlocking(block);
+		innerSocketChannel.implConfigureBlocking(block);
 	}
 
-    public boolean isBound() {
-        return innerSocketChannel.isBound();
-    }
+	public boolean isBound() {
+		return innerSocketChannel.isBound();
+	}
 
-    public boolean isInputOpen() {
-        return innerSocketChannel.isInputOpen();
-    }
+	public boolean isInputOpen() {
+		return innerSocketChannel.isInputOpen();
+	}
 
-    public boolean isOutputOpen() {
-        return innerSocketChannel.isOutputOpen();
-    }
+	public boolean isOutputOpen() {
+		return innerSocketChannel.isOutputOpen();
+	}
 
-    public void bind(SocketAddress local) throws IOException {
-        innerSocketChannel.bind(local);
-    }
+	public void bind(SocketAddress local) throws IOException {
+		innerSocketChannel.bind(local);
+	}
 
-    public SocketAddress remoteAddress() {
-        return remote;
-    }
+	public SocketAddress remoteAddress() {
+		return remote;
+	}
 
-    public boolean translateReadyOps(int ops, int initialOps, SelectionKeyImpl sk) {
-        return innerSocketChannel.translateReadyOps(ops, initialOps, sk);
-    }
+	public boolean translateReadyOps(int ops, int initialOps, SelectionKeyImpl sk) {
+		return innerSocketChannel.translateReadyOps(ops, initialOps, sk);
+	}
 
-    public SocketOpts options() {
-        return innerSocketChannel.options();
-    }
+	public SocketOpts options() {
+		return innerSocketChannel.options();
+	}
 
-    public InetSocketAddress localAddress() {
-        return innerSocketChannel.localAddress();
-    }
+	public InetSocketAddress localAddress() {
+		return innerSocketChannel.localAddress();
+	}
 
-    void ensureOpenAndUnconnected() throws IOException {
-        innerSocketChannel.ensureOpenAndUnconnected();
-    }
+	void ensureOpenAndUnconnected() throws IOException {
+		innerSocketChannel.ensureOpenAndUnconnected();
+	}
 
-    public void shutdownInput() throws IOException {
-        innerSocketChannel.shutdownInput();
-    }
+	public void shutdownInput() throws IOException {
+		innerSocketChannel.shutdownInput();
+	}
 
-    public void shutdownOutput() throws IOException {
-        innerSocketChannel.shutdownOutput();
-    }
+	public void shutdownOutput() throws IOException {
+		innerSocketChannel.shutdownOutput();
+	}
 
 }
