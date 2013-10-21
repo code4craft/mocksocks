@@ -15,3 +15,5 @@ Set global socks proxy for Java.
 ## Client:
 
 -DmockFile=/Users/yihua/dp_workspace/mocksocks/mocksocks-client/target/mocksocks-client-0.0.2-SNAPSHOT.jar -javaagent:/Users/yihua/dp_workspace/mocksocks/mocksocks-client/target/mocksocks-client-0.0.2-SNAPSHOT.jar
+
+void java.nio.channels.spi.AbstractSelectableChannel.removeKey(java.nio.channels.SelectionKey)

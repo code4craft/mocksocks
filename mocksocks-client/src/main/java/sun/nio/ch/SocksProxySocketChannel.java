@@ -12,20 +12,20 @@ import java.nio.channels.spi.SelectorProvider;
 /**
  * @author yihua.huang@dianping.com
  */
-public class SocksProxySocketChannel extends SocketChannelImpl {
+public class SocksProxySocketChannel extends SocketChannelImpl2 {
 
 	public SocksProxySocketChannel(SelectorProvider provider, SocketChannel innerSocketChannel) throws IOException {
 		super(provider);
-		this.innerSocketChannel = (sun.nio.ch.SocketChannelImpl) innerSocketChannel;
+		this.innerSocketChannel = (sun.nio.ch.SocketChannelImpl2) innerSocketChannel;
 	}
 
-	private sun.nio.ch.SocketChannelImpl innerSocketChannel;
+	private sun.nio.ch.SocketChannelImpl2 innerSocketChannel;
 
 	private SocketAddress remote;
 
 	@Override
 	public Socket socket() {
-		return new SocketWrapper(innerSocketChannel, remote);
+		return innerSocketChannel.socket();
 	}
 
 	@Override
@@ -40,17 +40,39 @@ public class SocksProxySocketChannel extends SocketChannelImpl {
 
 	@Override
 	public boolean translateAndUpdateReadyOps(int i, SelectionKeyImpl selectionKey) {
-		return innerSocketChannel.translateAndUpdateReadyOps(i, selectionKey);
+		return translateReadyOps(i, selectionKey.nioReadyOps(), selectionKey);
 	}
 
 	@Override
 	public boolean translateAndSetReadyOps(int i, SelectionKeyImpl selectionKey) {
-		return innerSocketChannel.translateAndSetReadyOps(i, selectionKey);
+		return translateReadyOps(i, 0, selectionKey);
 	}
 
 	@Override
 	public void translateAndSetInterestOps(int i, SelectionKeyImpl selectionKey) {
-		innerSocketChannel.translateAndSetReadyOps(i, selectionKey);
+		innerSocketChannel.translateAndSetInterestOps(i, selectionKey);
+	}
+
+	// @Override
+	// public boolean translateReadyOps(int ops, int initialOps,
+	// SelectionKeyImpl sk) {
+	// return innerSocketChannel.translateReadyOps(ops, initialOps, sk);
+	// }
+
+	public boolean translateReadyOps(int ops, int initialOps, SelectionKeyImpl sk) {
+		int intOps = sk.nioInterestOps(); // Do this just once, it synchronizes
+		int oldOps = sk.nioReadyOps();
+		int newOps = initialOps;
+
+		if ((ops & PollArrayWrapper.POLLNVAL) != 0) {
+			// This should only happen if this channel is pre-closed while a
+			// selection operation is in progress
+			// ## Throw an error if this channel has not been pre-closed
+			return false;
+		}
+
+		return innerSocketChannel.translateReadyOps(ops, initialOps, sk);
+
 	}
 
 	@Override
@@ -71,7 +93,12 @@ public class SocksProxySocketChannel extends SocketChannelImpl {
 
 		@Override
 		public void connect(SocketAddress endpoint, int timeout) throws IOException {
-            SocksProxySocketChannel.this.connect(endpoint);
+			SocksProxySocketChannel.this.connect(endpoint);
+		}
+
+		@Override
+		public synchronized void close() throws IOException {
+			innerSocketChannel.socket().close();
 		}
 
 		@Override
@@ -239,6 +266,19 @@ public class SocksProxySocketChannel extends SocketChannelImpl {
 	}
 
 	@Override
+	public int hashCode() {
+		return innerSocketChannel.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof SocksProxySocketChannel)) {
+			return false;
+		}
+		return innerSocketChannel.equals(((SocksProxySocketChannel) obj).innerSocketChannel);
+	}
+
+	@Override
 	public boolean isConnectionPending() {
 		return innerSocketChannel.isConnectionPending();
 	}
@@ -248,11 +288,67 @@ public class SocksProxySocketChannel extends SocketChannelImpl {
 		this.remote = remote;
 		SocketAddress socksProxy = getSocksProxy();
 		if (socksProxy == null) {
-			return innerSocketChannel.connect(remote);
+			innerSocketChannel.connect(remote);
 		} else {
-			return innerSocketChannel.connect(socksProxy);
+			innerSocketChannel.connect(socksProxy);
 		}
-	}
+        return false;
+    }
+
+//	public boolean connect(SocketAddress sa) throws IOException {
+//		int trafficClass = 0; // ## Pick up from options
+//		int localPort = 0;
+//
+//		ensureOpenAndUnconnected();
+//		InetSocketAddress isa = Net.checkAddress(sa);
+//		SecurityManager sm = System.getSecurityManager();
+//		if (sm != null)
+//			sm.checkConnect(isa.getAddress().getHostAddress(), isa.getPort());
+//		synchronized (blockingLock()) {
+//			int n = 0;
+//			try {
+//				try {
+//					begin();
+//					if (!isOpen()) {
+//						return false;
+//					}
+////					readerThread = NativeThread.current();
+//					for (;;) {
+//						InetAddress ia = isa.getAddress();
+//						if (ia.isAnyLocalAddress())
+//							ia = InetAddress.getLocalHost();
+//						n = Net.connect(getFD(), ia, isa.getPort(), trafficClass);
+//						if ((n == IOStatus.INTERRUPTED) && isOpen())
+//							continue;
+//						break;
+//					}
+//				} finally {
+//					end((n > 0) || (n == IOStatus.UNAVAILABLE));
+//					assert IOStatus.check(n);
+//				}
+//			} catch (IOException x) {
+//				// If an exception was thrown, close the channel after
+//				// invoking end() so as to avoid bogus
+//				// AsynchronousCloseExceptions
+//				close();
+//				throw x;
+//			}
+//			if (n > 0) {
+//
+//				// Connection succeeded; disallow further
+//				// invocation
+//                System.out.println("ST_CONNECTED");
+//                return true;
+//			}
+//			// If nonblocking and no exception then connection
+//			// pending; disallow another invocation
+//			if (!isBlocking())
+//                System.out.println("ST_PENDING");
+//			else
+//				assert false;
+//		}
+//		return false;
+//	}
 
 	protected SocketAddress getSocksProxy() {
 		SocketAddress proxySocketAddress;
@@ -324,15 +420,11 @@ public class SocksProxySocketChannel extends SocketChannelImpl {
 		return remote;
 	}
 
-	public boolean translateReadyOps(int ops, int initialOps, SelectionKeyImpl sk) {
-		return innerSocketChannel.translateReadyOps(ops, initialOps, sk);
-	}
-
 	public SocketOpts options() {
 		return innerSocketChannel.options();
 	}
 
-	public InetSocketAddress localAddress() {
+	public SocketAddress localAddress() {
 		return innerSocketChannel.localAddress();
 	}
 
@@ -347,5 +439,6 @@ public class SocksProxySocketChannel extends SocketChannelImpl {
 	public void shutdownOutput() throws IOException {
 		innerSocketChannel.shutdownOutput();
 	}
+
 
 }
