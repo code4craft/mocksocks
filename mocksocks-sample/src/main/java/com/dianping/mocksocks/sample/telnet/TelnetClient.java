@@ -94,7 +94,7 @@ public class TelnetClient {
     }
 
     public static void main(String[] args) throws Exception {
-        System.clearProperty("socksProxyHost");
+//        System.clearProperty("socksProxyHost");
         // Print usage if no argument is specified.
         if (args.length != 2) {
             System.err.println(

@@ -17,14 +17,42 @@ public class SocksProxySocketChannel extends SocketChannelImpl {
 	}
 
 	@Override
+	public SocketAddress remoteAddress() {
+		if (remote != null) {
+			return remote;
+		} else {
+			return super.remoteAddress();
+		}
+	}
+
+	@Override
 	public boolean connect(SocketAddress sa) throws IOException {
 		this.remote = sa;
+		boolean connect;
 		SocketAddress socksProxy = getSocksProxy();
 		if (socksProxy != null) {
-			return super.connect(socksProxy);
+			boolean blocking = isBlocking();
+			if (!blocking) {
+				// change to blocking mode for easy
+				configureBlocking(true);
+			}
+			connect = socksConnect(socksProxy);
+			if (!blocking) {
+				configureBlocking(false);
+			}
 		} else {
-			return super.connect(sa);
+			connect = super.connect(sa);
 		}
+		return connect;
+	}
+
+	private boolean socksConnect(SocketAddress socksProxy) throws IOException {
+		boolean connect;
+		connect = super.connect(socksProxy);
+		if (!connect) {
+			throw new IOException("Connect to proxy " + socksProxy + " fail!");
+		}
+		return connect;
 	}
 
 	protected SocketAddress getSocksProxy() {
