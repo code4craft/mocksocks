@@ -4,8 +4,6 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
@@ -14,17 +12,14 @@ import java.nio.channels.spi.SelectorProvider;
 /**
  * @author yihua.huang@dianping.com
  */
-public class SocksProxySocketChannel extends SocketChannel implements SelChImpl {
+public class SocksProxySocketChannel extends SocketChannelImpl  {
 
-	public SocksProxySocketChannel(SelectorProvider provider, SocketChannel innerSocketChannel) {
+	public SocksProxySocketChannel(SelectorProvider provider, SocketChannel innerSocketChannel) throws IOException {
 		super(provider);
-		this.innerSocketChannel = innerSocketChannel;
-		this.selCh = (SelChImpl) innerSocketChannel;
+		this.innerSocketChannel = (sun.nio.ch.SocketChannelImpl)innerSocketChannel;
 	}
 
-	private SocketChannel innerSocketChannel;
-
-	private SelChImpl selCh;
+	private sun.nio.ch.SocketChannelImpl innerSocketChannel;
 
 	private SocketAddress remote;
 
@@ -35,32 +30,32 @@ public class SocksProxySocketChannel extends SocketChannel implements SelChImpl 
 
 	@Override
 	public FileDescriptor getFD() {
-		return selCh.getFD();
+		return innerSocketChannel.getFD();
 	}
 
 	@Override
 	public int getFDVal() {
-		return selCh.getFDVal();
+		return innerSocketChannel.getFDVal();
 	}
 
 	@Override
 	public boolean translateAndUpdateReadyOps(int i, SelectionKeyImpl selectionKey) {
-		return selCh.translateAndUpdateReadyOps(i, selectionKey);
+		return innerSocketChannel.translateAndUpdateReadyOps(i, selectionKey);
 	}
 
 	@Override
 	public boolean translateAndSetReadyOps(int i, SelectionKeyImpl selectionKey) {
-		return selCh.translateAndSetReadyOps(i, selectionKey);
+		return innerSocketChannel.translateAndSetReadyOps(i, selectionKey);
 	}
 
 	@Override
 	public void translateAndSetInterestOps(int i, SelectionKeyImpl selectionKey) {
-		selCh.translateAndSetReadyOps(i, selectionKey);
+        innerSocketChannel.translateAndSetReadyOps(i, selectionKey);
 	}
 
 	@Override
 	public void kill() throws IOException {
-        selCh.kill();
+        innerSocketChannel.kill();
 	}
 
 	private static class SocketWrapper extends Socket {
@@ -229,7 +224,7 @@ public class SocksProxySocketChannel extends SocketChannel implements SelChImpl 
 			if (remoteAddress instanceof InetSocketAddress) {
 				return ((InetSocketAddress) remoteAddress).getAddress();
 			}
-			return null;
+			return innerSocketChannel.socket().getInetAddress();
 		}
 	};
 
@@ -247,11 +242,9 @@ public class SocksProxySocketChannel extends SocketChannel implements SelChImpl 
 	public boolean connect(SocketAddress remote) throws IOException {
 		this.remote = remote;
 		SocketAddress socksProxy = getSocksProxy();
-        System.out.println("connect to " + socksProxy);
         if (socksProxy == null) {
 			return innerSocketChannel.connect(remote);
 		} else {
-			System.out.println("connect to " + remote);
 			return innerSocketChannel.connect(socksProxy);
 		}
 	}
@@ -298,38 +291,56 @@ public class SocksProxySocketChannel extends SocketChannel implements SelChImpl 
 
 	@Override
 	protected void implCloseSelectableChannel() throws IOException {
-		try {
-			Class<?> aClass = Class.forName("sun.nio.ch.SocketChannelImpl");
-			Method implCloseSelectableChannel = aClass.getDeclaredMethod("implCloseSelectableChannel");
-			implCloseSelectableChannel.setAccessible(true);
-			implCloseSelectableChannel.invoke(innerSocketChannel);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
+        innerSocketChannel.implCloseSelectableChannel();
 	}
 
 	@Override
 	protected void implConfigureBlocking(boolean block) throws IOException {
-		try {
-			Class<?> aClass = Class.forName("sun.nio.ch.SocketChannelImpl");
-			Method implConfigureBlocking = aClass.getDeclaredMethod("implConfigureBlocking", Boolean.TYPE);
-			implConfigureBlocking.setAccessible(true);
-			implConfigureBlocking.invoke(innerSocketChannel, block);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
+        innerSocketChannel.implConfigureBlocking(block);
 	}
+
+    public boolean isBound() {
+        return innerSocketChannel.isBound();
+    }
+
+    public boolean isInputOpen() {
+        return innerSocketChannel.isInputOpen();
+    }
+
+    public boolean isOutputOpen() {
+        return innerSocketChannel.isOutputOpen();
+    }
+
+    public void bind(SocketAddress local) throws IOException {
+        innerSocketChannel.bind(local);
+    }
+
+    public SocketAddress remoteAddress() {
+        return remote;
+    }
+
+    public boolean translateReadyOps(int ops, int initialOps, SelectionKeyImpl sk) {
+        return innerSocketChannel.translateReadyOps(ops, initialOps, sk);
+    }
+
+    public SocketOpts options() {
+        return innerSocketChannel.options();
+    }
+
+    public InetSocketAddress localAddress() {
+        return innerSocketChannel.localAddress();
+    }
+
+    void ensureOpenAndUnconnected() throws IOException {
+        innerSocketChannel.ensureOpenAndUnconnected();
+    }
+
+    public void shutdownInput() throws IOException {
+        innerSocketChannel.shutdownInput();
+    }
+
+    public void shutdownOutput() throws IOException {
+        innerSocketChannel.shutdownOutput();
+    }
 
 }

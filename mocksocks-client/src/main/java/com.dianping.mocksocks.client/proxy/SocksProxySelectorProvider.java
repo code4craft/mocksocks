@@ -49,6 +49,7 @@ public class SocksProxySelectorProvider extends SelectorProvider {
 
 	@Override
 	public SocketChannel openSocketChannel() throws IOException {
-		return new SocksProxySocketChannel(innerProvider, innerProvider.openSocketChannel());
+        return new SocksProxySocketChannel(innerProvider, innerProvider.openSocketChannel());
+//		return innerProvider.openSocketChannel();
 	}
 }
