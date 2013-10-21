@@ -18,7 +18,7 @@ public class SocksAgent {
         ClassPool classPool = ClassPool.getDefault();
         try {
             CtClass ctClass = classPool.get("sun.nio.ch.SelChImpl");
-            CtClass ctClass2 = classPool.get("com.dianping.mocksocks.client.proxy.SocksProxySocketChannel");
+            CtClass ctClass2 = classPool.get("com.dianping.mocksocks.client.sun.nio.ch.SocksProxySocketChannel");
             ctClass.setModifiers(Modifier.PUBLIC);
             ctClass.writeFile();
             ctClass2.setSuperclass(ctClass);

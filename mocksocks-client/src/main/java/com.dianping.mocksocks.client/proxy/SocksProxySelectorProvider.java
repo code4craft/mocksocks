@@ -1,5 +1,7 @@
 package com.dianping.mocksocks.client.proxy;
 
+import sun.nio.ch.SocksProxySocketChannel;
+
 import java.io.IOException;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.Pipe;

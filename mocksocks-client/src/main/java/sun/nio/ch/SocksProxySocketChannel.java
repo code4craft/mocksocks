@@ -1,4 +1,4 @@
-package com.dianping.mocksocks.client.proxy;
+package sun.nio.ch;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
