@@ -1,4 +1,6 @@
-package sun.nio.ch;
+package com.dianping.mocksocks.client.socks;
+
+import sun.nio.ch.SocksProxySocketChannel;
 
 import java.io.IOException;
 import java.nio.channels.DatagramChannel;
@@ -47,7 +49,6 @@ public class SocksProxySelectorProvider extends SelectorProvider {
 
 	@Override
 	public SocketChannel openSocketChannel() throws IOException {
-        return new SocksProxySocketChannel(innerProvider, new SocketChannelImpl2(innerProvider));
-//		return innerProvider.openSocketChannel();
+        return new SocksProxySocketChannel(innerProvider);
 	}
 }

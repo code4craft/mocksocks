@@ -21,7 +21,7 @@ public class SocksAgent {
 			inst.appendToBootstrapClassLoaderSearch(new JarFile(mockFile));
 		}
 		System.setProperty("java.nio.channels.spi.SelectorProvider",
-				"sun.nio.ch.SocksProxySelectorProvider");
+				"com.dianping.mocksocks.client.socks.SocksProxySelectorProvider");
 
 	}
 
