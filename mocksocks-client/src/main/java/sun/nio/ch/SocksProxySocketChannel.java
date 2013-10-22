@@ -5,6 +5,7 @@ import java.net.Inet6Address;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.IllegalBlockingModeException;
 import java.nio.channels.spi.SelectorProvider;
 
 /**
@@ -45,11 +46,18 @@ public class SocksProxySocketChannel extends SocketChannelImpl {
 			boolean blocking = isBlocking();
 			if (!blocking) {
 				// change to blocking mode for easy
-				configureBlocking(true);
-			}
-			connect = socksConnect(socksProxy);
-			if (!blocking) {
-				configureBlocking(false);
+				try {
+					configureBlocking(true);
+					connect = socksConnect(socksProxy);
+					if (!blocking) {
+						configureBlocking(false);
+					}
+				} catch (IllegalBlockingModeException e) {
+					System.err.println("Can't set proxy for " + sa);
+					connect = super.connect(sa);
+				}
+			} else {
+				connect = socksConnect(socksProxy);
 			}
 		} else {
 			connect = super.connect(sa);
@@ -80,13 +88,13 @@ public class SocksProxySocketChannel extends SocketChannelImpl {
 		if (inetSocketAddress.getAddress() instanceof Inet6Address) {
 			byteBuffer.put(ATYP_IPV6);
 		} else {
-            byteBuffer.put(ATYP_IPV4);
+			byteBuffer.put(ATYP_IPV4);
 		}
-        byteBuffer.put(inetSocketAddress.getAddress().getAddress());
-        byteBuffer.putShort((short)(0xffff&inetSocketAddress.getPort()));
+		byteBuffer.put(inetSocketAddress.getAddress().getAddress());
+		byteBuffer.putShort((short) (0xffff & inetSocketAddress.getPort()));
 		byteBuffer.flip();
 		write(byteBuffer);
-        read(byteBuffer);
+		read(byteBuffer);
 	}
 
 	private void sendSockInitRequest(ByteBuffer byteBuffer) throws IOException {
