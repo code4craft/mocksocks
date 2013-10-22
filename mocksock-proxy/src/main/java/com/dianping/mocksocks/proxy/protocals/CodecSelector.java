@@ -1,9 +1,9 @@
 package com.dianping.mocksocks.proxy.protocals;
 
-import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelDownstreamHandler;
-import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelUpstreamHandler;
+import org.jboss.netty.handler.codec.string.StringDecoder;
+import org.jboss.netty.handler.codec.string.StringEncoder;
 
 import java.net.InetSocketAddress;
 
@@ -12,20 +12,24 @@ import java.net.InetSocketAddress;
  */
 public class CodecSelector {
 
-    public ChannelUpstreamHandler decoder(ChannelHandlerContext ctx, Channel channel, Object msg){
-        InetSocketAddress remoteAddress = (InetSocketAddress)channel.getRemoteAddress();
-        if (remoteAddress.getPort()>=2200&&remoteAddress.getPort()<2300){
-            return new HessianDecoder();
-        }
-        return null;
-    }
+	public static ChannelUpstreamHandler decoder(InetSocketAddress remoteAddress, Object msg) {
+		if (remoteAddress.getPort() >= 2200 && remoteAddress.getPort() < 2300) {
+			return new HessianDecoder();
+		}
+		if (remoteAddress.getPort() == 80) {
+			return new StringDecoder();
+		}
+		return null;
+	}
 
-    public ChannelDownstreamHandler encoder(ChannelHandlerContext ctx, Channel channel, Object msg){
-        InetSocketAddress remoteAddress = (InetSocketAddress)channel.getRemoteAddress();
-        if (remoteAddress.getPort()>=2200&&remoteAddress.getPort()<2300){
-            return new HessianEncoder();
+	public static ChannelDownstreamHandler encoder(InetSocketAddress remoteAddress, Object msg) {
+		if (remoteAddress.getPort() >= 2200 && remoteAddress.getPort() < 2300) {
+			return new HessianEncoder();
+		}
+        if (remoteAddress.getPort() == 80) {
+            return new StringEncoder();
         }
-        return null;
-    }
+		return null;
+	}
 
 }

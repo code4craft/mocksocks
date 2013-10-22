@@ -13,7 +13,8 @@ public class HessianDecoder extends ReplayingDecoder<VoidEnum> {
 	@Override
 	protected Object decode(ChannelHandlerContext ctx, Channel channel, ChannelBuffer buffer, VoidEnum state)
 			throws Exception {
-		Hessian2Input h2in = new Hessian2Input(new ChannelBufferInputStream(buffer.readBytes(buffer.readInt())));
+        ChannelBuffer buffer1 = buffer.readBytes(buffer.readInt());
+        Hessian2Input h2in = new Hessian2Input(new ChannelBufferInputStream(buffer1));
 		try {
             Object o = h2in.readObject();
             return o;
