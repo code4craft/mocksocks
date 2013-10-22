@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.dianping</groupId>
-    <artifactId>monkeysocks-recorder</artifactId>
+    <artifactId>mocksocks-recorder</artifactId>
     <version>0.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
