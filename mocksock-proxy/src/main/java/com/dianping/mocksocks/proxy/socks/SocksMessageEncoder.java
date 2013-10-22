@@ -49,9 +49,8 @@ public class SocksMessageEncoder extends OneToOneEncoder {
 		if (msg instanceof SocksMessage) {
 			buffer = ChannelBuffers.buffer(DEFAULT_ENCODER_BUFFER_SIZE);
 			((SocksMessage) msg).encodeAsByteBuf(buffer);
-		} else if (msg instanceof ChannelBuffer) {
-			buffer = (ChannelBuffer) msg;
-		}
-		return buffer;
+            return buffer;
+        }
+        return msg;
 	}
 }

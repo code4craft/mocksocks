@@ -104,13 +104,14 @@ public class SocksServerConnectHandler extends SimpleChannelUpstreamHandler {
 			this.name = name;
 		}
 
-		@Override
+        @Override
 		public void messageReceived(ChannelHandlerContext ctx, final MessageEvent e) throws Exception {
 			final ChannelBuffer msg = (ChannelBuffer) e.getMessage();
 			synchronized (trafficLock) {
 				inboundChannel.write(msg);
                 printWriter.println(name + ChannelBuffers.hexDump(msg));
             }
+            super.messageReceived(ctx, e);
 		}
 
 		@Override
