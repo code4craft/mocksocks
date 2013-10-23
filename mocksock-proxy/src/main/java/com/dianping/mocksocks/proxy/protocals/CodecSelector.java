@@ -15,11 +15,12 @@ public class CodecSelector {
 	public static ChannelUpstreamHandler decoder(InetSocketAddress remoteAddress, Object msg) {
 		if (remoteAddress.getPort() >= 2200 && remoteAddress.getPort() < 2300) {
 			return new HessianDecoder();
+//            return new StringDecoder();
 		}
-		if (remoteAddress.getPort() == 80) {
-			return new StringDecoder();
-		}
-		return null;
+//		if (remoteAddress.getPort() == 80) {
+//			return new StringDecoder();
+//		}
+		return new StringDecoder();
 	}
 
 	public static ChannelDownstreamHandler encoder(InetSocketAddress remoteAddress, Object msg) {
@@ -29,7 +30,7 @@ public class CodecSelector {
         if (remoteAddress.getPort() == 80) {
             return new StringEncoder();
         }
-		return null;
+        return new StringEncoder();
 	}
 
 }
