@@ -87,8 +87,9 @@ public class ConnectionStatus {
 
 	@Override
 	public String toString() {
-		return "ConnectionStatus{" + "startTime=" + new Date(startTime) + ", endTime=" + new Date(endTime)
-				+ ", timeCost=" + (endTime>0?(endTime - startTime):0) + bytesSend + ", bytesSend=" + bytesSend + ", bytesReceive="
-				+ bytesReceive + ", status='" + status + '\'' + ", remote=" + channel.getRemoteAddress() + '}';
+		return "ConnectionStatus{remote=" + channel.getRemoteAddress() + ",startTime=" + new Date(startTime)
+				+ ", endTime=" + new Date(endTime) + ", timeCost=" + (endTime > 0 ? (endTime - startTime) : 0)
+				+ bytesSend + ", bytesSend=" + bytesSend + ", bytesReceive=" + bytesReceive + ", status='" + status
+				+ '}';
 	}
 }

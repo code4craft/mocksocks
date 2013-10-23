@@ -42,7 +42,10 @@ public class ConnectionMonitor {
 	public static void output() {
 		System.out.println("==============================================================================");
 		for (Map.Entry<Channel, ConnectionStatus> connectionStatusEntry : connectionStatuses.entrySet()) {
-			System.out.println(connectionStatusEntry.getValue());
+			if (connectionStatusEntry.getValue().getEndTime() != 0l
+					&& connectionStatusEntry.getValue().getEndTime() > (System.currentTimeMillis() - 30000)) {
+				System.out.println(connectionStatusEntry.getValue());
+			}
 		}
 	}
 }
