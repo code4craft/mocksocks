@@ -8,7 +8,7 @@ import javax.swing.*;
 public class Main {
     private JList list1;
     private JPanel panel;
-    private JFormattedTextField asFormattedTextField;
+    private JFormattedTextField sdasdsadFormattedTextField;
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Main");

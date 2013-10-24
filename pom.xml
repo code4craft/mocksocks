@@ -18,7 +18,7 @@
         </developer>
     </developers>
     <modules>
-        <module>mocksock-proxy</module>
+        <module>mocksocks-proxy</module>
         <module>mocksocks-junit</module>
         <module>mocksocks-gui</module>
         <module>mocksocks-client</module>

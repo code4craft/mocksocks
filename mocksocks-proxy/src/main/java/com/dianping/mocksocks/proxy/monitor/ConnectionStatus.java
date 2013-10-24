@@ -2,8 +2,6 @@ package com.dianping.mocksocks.proxy.monitor;
 
 import org.jboss.netty.channel.Channel;
 
-import java.util.Date;
-
 /**
  * @author yihua.huang@dianping.com
  */
@@ -13,9 +11,9 @@ public class ConnectionStatus {
 
 	private long endTime;
 
-	private long bytesSend;
+	private int bytesSend;
 
-	private long bytesReceive;
+	private int bytesReceive;
 
 	private final Channel channel;
 
@@ -46,11 +44,11 @@ public class ConnectionStatus {
 		this.endTime = endTime;
 	}
 
-	public long getBytesSend() {
+	public int getBytesSend() {
 		return bytesSend;
 	}
 
-	public synchronized void setBytesSend(long bytesSend) {
+	public synchronized void setBytesSend(int bytesSend) {
 		this.bytesSend = bytesSend;
 	}
 
@@ -58,11 +56,11 @@ public class ConnectionStatus {
 		this.bytesSend += bytesSend;
 	}
 
-	public long getBytesReceive() {
+	public int getBytesReceive() {
 		return bytesReceive;
 	}
 
-	public synchronized void setBytesReceive(long bytesReceive) {
+	public synchronized void setBytesReceive(int bytesReceive) {
 		this.bytesReceive = bytesReceive;
 	}
 
@@ -87,9 +85,10 @@ public class ConnectionStatus {
 
 	@Override
 	public String toString() {
-		return "ConnectionStatus{remote=" + channel.getRemoteAddress() + ",startTime=" + new Date(startTime)
-				+ ", endTime=" + new Date(endTime) + ", timeCost=" + (endTime > 0 ? (endTime - startTime) : 0)
-				+ bytesSend + ", bytesSend=" + bytesSend + ", bytesReceive=" + bytesReceive + ", status='" + status
-				+ '}';
+		return "ConnectionStatus{remote=" + channel.getRemoteAddress() + ",startTime="
+				+ StatusFormatter.formatTimeStamp(startTime) + ", endTime=" + StatusFormatter.formatTimeStamp(endTime)
+				+ ", timeCost=" + (endTime > 0 ? StatusFormatter.formatTimePeriod(endTime - startTime) : 0)
+				+ ", bytesSend=" + StatusFormatter.formatBytes(bytesSend) + ", bytesReceive="
+				+ StatusFormatter.formatBytes(bytesReceive) + ", status=" + status + '}';
 	}
 }
