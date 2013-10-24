@@ -45,6 +45,10 @@ public class ConnectionMonitor {
         return new ArrayList<ConnectionStatus>(connectionStatuses.values());
     }
 
+    public static void clear(){
+        connectionStatuses.clear();
+    }
+
 	public static void output() {
 		System.out.println("==============================================================================");
 		for (Map.Entry<Channel, ConnectionStatus> connectionStatusEntry : connectionStatuses.entrySet()) {

@@ -1,5 +1,6 @@
 package com.dianping.mocksocks.proxy.socks;
 
+import com.dianping.mocksocks.proxy.Proxy;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.socket.ClientSocketChannelFactory;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
@@ -12,28 +13,47 @@ import java.util.concurrent.Executors;
 /**
  * @author yihua.huang@dianping.com
  */
-public class SocksProxy {
+public class SocksProxy implements Proxy {
 
-    public void run() {
+	private ServerBootstrap sb;
 
-        // Configure the bootstrap.
-        Executor executor = Executors.newCachedThreadPool();
-        Executor executorWorker = Executors.newCachedThreadPool();
-        ServerBootstrap sb = new ServerBootstrap(
-                new NioServerSocketChannelFactory(executor, executorWorker));
+	public void run() {
 
-        // Set up the event pipeline factory.
-        ClientSocketChannelFactory cf =
-                new NioClientSocketChannelFactory(executor, executorWorker);
+		// Configure the bootstrap.
+		Executor executor = Executors.newCachedThreadPool();
+		Executor executorWorker = Executors.newCachedThreadPool();
+		sb = new ServerBootstrap(new NioServerSocketChannelFactory(executor, executorWorker));
 
-        sb.setPipelineFactory(
-                new SocksProxyPipelineFactory(cf));
+		// Set up the event pipeline factory.
+		ClientSocketChannelFactory cf = new NioClientSocketChannelFactory(executor, executorWorker);
 
-        // Start up the server.
-        sb.bind(new InetSocketAddress(13721));
-    }
+		sb.setPipelineFactory(new SocksProxyPipelineFactory(cf));
 
-    public static void main(String[] args) {
-        new SocksProxy().run();
-    }
+		// Start up the server.
+		sb.bind(new InetSocketAddress(13721));
+	}
+
+	public static void main(String[] args) {
+		new SocksProxy().run();
+	}
+
+	@Override
+	public void start() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				SocksProxy.this.run();
+			}
+		}).start();
+	}
+
+	@Override
+	public void stop() {
+		sb.shutdown();
+	}
+
+	@Override
+	public void loadCache(String cacheFile) {
+
+	}
 }

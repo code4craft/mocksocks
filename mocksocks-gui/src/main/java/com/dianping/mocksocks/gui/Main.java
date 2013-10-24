@@ -1,9 +1,12 @@
 package com.dianping.mocksocks.gui;
 
 import com.dianping.mocksocks.gui.data.ConnectionStatusListModel;
+import com.dianping.mocksocks.proxy.monitor.ConnectionMonitor;
 import com.dianping.mocksocks.proxy.socks.SocksProxy;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * @author yihua.huang@dianping.com
@@ -11,21 +14,39 @@ import javax.swing.*;
 public class Main {
 	private JList list1;
 	private JPanel panel;
+	private JButton startButton;
+	private JButton stopButton;
+	private JButton clearButton;
 
-    public Main() {
-		final SocksProxy socksProxy = new SocksProxy();
-		new Thread(new Runnable() {
+	private ConnectionStatusListModel listModel;
+	final SocksProxy socksProxy = new SocksProxy();
+
+	public Main() {
+		listModel = new ConnectionStatusListModel(5000);
+		list1.setModel(listModel);
+		startButton.addActionListener(new ActionListener() {
 			@Override
-			public void run() {
-				socksProxy.run();
+			public void actionPerformed(ActionEvent e) {
+				socksProxy.start();
 			}
-		}).start();
-		ListModel listModel = new ConnectionStatusListModel(5000);
-        list1.setModel(listModel);
+		});
+		stopButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                socksProxy.stop();
+            }
+        });
+        clearButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                listModel.clear();
+                ConnectionMonitor.clear();
+            }
+        });
 	}
 
 	public static void main(String[] args) {
-		JFrame frame = new JFrame("Main");
+		JFrame frame = new JFrame("MockSocks");
 		frame.setContentPane(new Main().panel);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();

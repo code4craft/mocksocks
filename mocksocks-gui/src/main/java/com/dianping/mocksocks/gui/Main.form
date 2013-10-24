@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.dianping.mocksocks.gui.Main">
   <grid id="27dc6" binding="panel" layout-manager="FormLayout">
+    <rowspec value="center:max(d;4px):noGrow"/>
+    <rowspec value="top:3dlu:noGrow"/>
     <rowspec value="center:d:grow"/>
     <colspec value="fill:d:grow"/>
     <constraints>
@@ -16,25 +18,70 @@
       <color color="-16777216"/>
     </border>
     <children>
-      <component id="4e669" class="javax.swing.JList" binding="list1" default-binding="true">
+      <scrollpane id="6d192">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="50"/>
-          </grid>
-          <forms defaultalign-vert="false"/>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-horz="false" defaultalign-vert="false"/>
         </constraints>
-        <properties>
-          <dropMode value="ON"/>
-          <enabled value="true"/>
-          <model>
-            <item value="ConnectionStatus{remote=/112.124.5.74:80,startTime=23:09:38/494, endTime=23:09:38/732, timeCost=238ms, bytesSend=0, bytesReceive=95.52K, status=closed}"/>
-            <item value="ConnectionStatus{remote=/112.124.5.74:80,startTime=23:09:38/494, endTime=23:09:38/732, timeCost=238ms, bytesSend=0, bytesReceive=95.52K, status=closed}"/>
-            <item value="ConnectionStatus{remote=/112.124.5.74:80,startTime=23:09:38/494, endTime=23:09:38/732, timeCost=238ms, bytesSend=0, bytesReceive=95.52K, status=closed}"/>
-            <item value="ConnectionStatus{remote=/112.124.5.74:80,startTime=23:09:38/494, endTime=23:09:38/732, timeCost=238ms, bytesSend=0, bytesReceive=95.52K, status=closed}"/>
-            <item value="ConnectionStatus{remote=/112.124.5.74:80,startTime=23:09:38/494, endTime=23:09:38/732, timeCost=238ms, bytesSend=0, bytesReceive=95.52K, status=closed}"/>
-          </model>
-        </properties>
-      </component>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="4e669" class="javax.swing.JList" binding="list1" default-binding="true">
+            <constraints/>
+            <properties>
+              <dropMode value="ON"/>
+              <enabled value="true"/>
+              <model>
+                <item value="ConnectionStatus{remote=/112.124.5.74:80,startTime=23:09:38/494, endTime=23:09:38/732, timeCost=238ms, bytesSend=0, bytesReceive=95.52K, status=closed}"/>
+                <item value="ConnectionStatus{remote=/112.124.5.74:80,startTime=23:09:38/494, endTime=23:09:38/732, timeCost=238ms, bytesSend=0, bytesReceive=95.52K, status=closed}"/>
+                <item value="ConnectionStatus{remote=/112.124.5.74:80,startTime=23:09:38/494, endTime=23:09:38/732, timeCost=238ms, bytesSend=0, bytesReceive=95.52K, status=closed}"/>
+                <item value="ConnectionStatus{remote=/112.124.5.74:80,startTime=23:09:38/494, endTime=23:09:38/732, timeCost=238ms, bytesSend=0, bytesReceive=95.52K, status=closed}"/>
+                <item value="ConnectionStatus{remote=/112.124.5.74:80,startTime=23:09:38/494, endTime=23:09:38/732, timeCost=238ms, bytesSend=0, bytesReceive=95.52K, status=closed}"/>
+              </model>
+            </properties>
+          </component>
+        </children>
+      </scrollpane>
+      <grid id="8f9d5" layout-manager="GridLayoutManager" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <vspacer id="61989">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+            </constraints>
+          </vspacer>
+          <component id="e607c" class="javax.swing.JButton" binding="startButton" default-binding="true">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Start"/>
+            </properties>
+          </component>
+          <component id="36216" class="javax.swing.JButton" binding="stopButton" default-binding="true">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Stop"/>
+            </properties>
+          </component>
+          <component id="e1535" class="javax.swing.JButton" binding="clearButton" default-binding="true">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Clear"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
     </children>
   </grid>
 </form>

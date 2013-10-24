@@ -1,12 +1,18 @@
 package com.dianping.mocksocks.gui.data;
 
 import com.dianping.mocksocks.proxy.monitor.ConnectionMonitor;
+import com.dianping.mocksocks.proxy.monitor.ConnectionStatus;
+
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author yihua.huang@dianping.com
  */
 public class ConnectionStatusListModel extends AbstractListModel {
+
+    private List<String> display = new ArrayList<String>();
 
 	public ConnectionStatusListModel(final int refreshTime) {
 		new Thread(new Runnable() {
@@ -18,7 +24,11 @@ public class ConnectionStatusListModel extends AbstractListModel {
                     } catch (InterruptedException e) {
 						e.printStackTrace();
                     }
-                    fireContentsChanged(this, 0, ConnectionMonitor.status().size());
+                    display.clear();
+                    for (ConnectionStatus connectionStatus : ConnectionMonitor.status()) {
+                        display.add(connectionStatus.toString());
+                    }
+                    fireContentsChanged(this, 0, display.size());
                 }
 			}
 		}).start();
@@ -26,11 +36,16 @@ public class ConnectionStatusListModel extends AbstractListModel {
 
 	@Override
 	public int getSize() {
-		return ConnectionMonitor.status().size();
+		return display.size();
 	}
 
 	@Override
 	public Object getElementAt(int index) {
-		return ConnectionMonitor.status().get(index);
+		return display.get(index);
 	}
+
+    public void clear(){
+        display.clear();
+        fireContentsChanged(this, 0, 1);
+    }
 }
