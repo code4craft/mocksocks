@@ -2,6 +2,8 @@ package com.dianping.mocksocks.proxy.monitor;
 
 import org.jboss.netty.channel.Channel;
 
+import java.net.InetSocketAddress;
+
 /**
  * @author yihua.huang@dianping.com
  */
@@ -71,6 +73,10 @@ public class ConnectionStatus {
 	public String getStatus() {
 		return status;
 	}
+
+    public InetSocketAddress getAddress(){
+        return (InetSocketAddress)channel.getRemoteAddress();
+    }
 
 	public ConnectionStatus setStatus(String status) {
 		this.status = status;

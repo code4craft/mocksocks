@@ -9,6 +9,7 @@ import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author yihua.huang@dianping.com
@@ -16,6 +17,8 @@ import java.util.concurrent.Executors;
 public class SocksProxy implements Proxy {
 
 	private ServerBootstrap sb;
+
+	private AtomicBoolean running = new AtomicBoolean(false);
 
 	public void run() {
 
@@ -39,17 +42,21 @@ public class SocksProxy implements Proxy {
 
 	@Override
 	public void start() {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				SocksProxy.this.run();
-			}
-		}).start();
+		if (running.compareAndSet(false, true)) {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					SocksProxy.this.run();
+				}
+			}).start();
+		}
 	}
 
 	@Override
 	public void stop() {
-		sb.shutdown();
+		if (running.compareAndSet(true, false)) {
+			sb.shutdown();
+		}
 	}
 
 	@Override

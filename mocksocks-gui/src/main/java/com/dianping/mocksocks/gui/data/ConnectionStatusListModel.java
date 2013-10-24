@@ -12,26 +12,42 @@ import java.util.List;
  */
 public class ConnectionStatusListModel extends AbstractListModel {
 
-    private List<String> display = new ArrayList<String>();
+	private List<String> display = new ArrayList<String>();
+
+	private List<Filter<ConnectionStatus>> filters = new ArrayList<Filter<ConnectionStatus>>();
 
 	public ConnectionStatusListModel(final int refreshTime) {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-                while (true){
-                    try {
-                        Thread.sleep(refreshTime);
-                    } catch (InterruptedException e) {
+				while (true) {
+					try {
+						Thread.sleep(refreshTime);
+					} catch (InterruptedException e) {
 						e.printStackTrace();
-                    }
-                    display.clear();
-                    for (ConnectionStatus connectionStatus : ConnectionMonitor.status()) {
-                        display.add(connectionStatus.toString());
-                    }
-                    fireContentsChanged(this, 0, display.size());
-                }
+					}
+					update();
+				}
 			}
+
 		}).start();
+	}
+
+	public synchronized void update() {
+		long time = System.currentTimeMillis();
+		display.clear();
+		connectionLoop: for (ConnectionStatus connectionStatus : ConnectionMonitor.status()) {
+			if (filters.size() > 0) {
+				for (Filter<ConnectionStatus> filter : filters) {
+					if (!filter.preserve(connectionStatus)) {
+						continue connectionLoop;
+					}
+				}
+			}
+			display.add(connectionStatus.toString());
+		}
+		fireContentsChanged(this, 0, display.size());
+		System.out.println("time takes " + (System.currentTimeMillis() - time));
 	}
 
 	@Override
@@ -39,13 +55,22 @@ public class ConnectionStatusListModel extends AbstractListModel {
 		return display.size();
 	}
 
+	public void setFilters(List<Filter<ConnectionStatus>> filters) {
+		this.filters = filters;
+	}
+
+	public void setFilter(Filter<ConnectionStatus> filter) {
+		this.filters.clear();
+		filters.add(filter);
+	}
+
 	@Override
 	public Object getElementAt(int index) {
 		return display.get(index);
 	}
 
-    public void clear(){
-        display.clear();
-        fireContentsChanged(this, 0, 1);
-    }
+	public void clear() {
+		display.clear();
+		fireContentsChanged(this, 0, 1);
+	}
 }
