@@ -2,6 +2,8 @@ package com.dianping.mocksocks.proxy.monitor;
 
 import org.jboss.netty.channel.Channel;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,19 +15,19 @@ public class ConnectionMonitor {
 	private static final Map<Channel, ConnectionStatus> connectionStatuses = new ConcurrentHashMap<Channel, ConnectionStatus>();
 
 	static {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				while (true) {
-					try {
-						Thread.sleep(5000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					output();
-				}
-			}
-		}).start();
+//		new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				while (true) {
+//					try {
+//						Thread.sleep(5000);
+//					} catch (InterruptedException e) {
+//						e.printStackTrace();
+//					}
+//					output();
+//				}
+//			}
+//		}).start();
 	}
 
 	public static ConnectionStatus getStatus(Channel channel) {
@@ -38,6 +40,10 @@ public class ConnectionMonitor {
 		}
 		return connectionStatus;
 	}
+
+    public static List<ConnectionStatus> status(){
+        return new ArrayList<ConnectionStatus>(connectionStatuses.values());
+    }
 
 	public static void output() {
 		System.out.println("==============================================================================");

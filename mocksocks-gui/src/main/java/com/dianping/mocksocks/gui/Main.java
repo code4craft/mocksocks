@@ -1,32 +1,34 @@
 package com.dianping.mocksocks.gui;
 
+import com.dianping.mocksocks.gui.data.ConnectionStatusListModel;
+import com.dianping.mocksocks.proxy.socks.SocksProxy;
+
 import javax.swing.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 /**
  * @author yihua.huang@dianping.com
  */
 public class Main {
-    private JList list1;
-    private JPanel panel;
-    private JFormattedTextField sdasdsadFormattedTextField;
+	private JList list1;
+	private JPanel panel;
 
     public Main() {
-        list1.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                System.out.println(e.getKeyChar());
-                super.keyTyped(e);    //To change body of overridden methods use File | Settings | File Templates.
-            }
-        });
-    }
+		final SocksProxy socksProxy = new SocksProxy();
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				socksProxy.run();
+			}
+		}).start();
+		ListModel listModel = new ConnectionStatusListModel(5000);
+        list1.setModel(listModel);
+	}
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Main");
-        frame.setContentPane(new Main().panel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-    }
+	public static void main(String[] args) {
+		JFrame frame = new JFrame("Main");
+		frame.setContentPane(new Main().panel);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.pack();
+		frame.setVisible(true);
+	}
 }
