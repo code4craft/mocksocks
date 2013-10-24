@@ -13,5 +13,18 @@
     <artifactId>mocksocks-gui</artifactId>
     <version>0.0.2-SNAPSHOT</version>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.jgoodies</groupId>
+            <artifactId>jgoodies-forms</artifactId>
+            <version>1.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jgoodies</groupId>
+            <artifactId>jgoodies-common</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+    </dependencies>
+
 
 </project>
