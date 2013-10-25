@@ -1,6 +1,6 @@
 package com.dianping.mocksocks.gui.gui;
 
-import com.dianping.mocksocks.proxy.rules.RedirectRules;
+import com.dianping.mocksocks.proxy.rules.RulesContainer;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -46,7 +46,7 @@ public class RedirectRulesDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					RedirectRules.getInstance().setFilters(RedirectRules.parse(textArea1.getText()));
+                    RulesContainer.getInstance().setRedirectRules(RulesContainer.parse(textArea1.getText()));
 				} catch (Exception ex) {
                     ex.printStackTrace();
                     JOptionPane.showConfirmDialog(contentPane, ex);

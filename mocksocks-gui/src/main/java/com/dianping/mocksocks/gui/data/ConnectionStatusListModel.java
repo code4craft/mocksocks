@@ -35,7 +35,6 @@ public class ConnectionStatusListModel extends AbstractListModel {
 	}
 
 	public synchronized void update() {
-		long time = System.currentTimeMillis();
 		display.clear();
 		connectionLoop: for (ConnectionStatus connectionStatus : ConnectionMonitor.getInstance().status()) {
 			if (filters.size() > 0) {
@@ -48,7 +47,6 @@ public class ConnectionStatusListModel extends AbstractListModel {
 			display.add(connectionStatus.toString());
 		}
 		fireContentsChanged(this, 0, display.size());
-		System.out.println("time takes " + (System.currentTimeMillis() - time));
 	}
 
 	@Override
