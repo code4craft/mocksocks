@@ -10,9 +10,6 @@ import org.jboss.netty.handler.codec.socks.SocksCmdRequest;
 import org.jboss.netty.handler.codec.socks.SocksCmdResponse;
 import org.jboss.netty.handler.codec.socks.SocksMessage;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 
 /**
@@ -26,21 +23,9 @@ public class SocksServerConnectHandler extends SimpleChannelUpstreamHandler {
 		return name;
 	}
 
-	private static PrintWriter printWriter;
-
 	private final ClientSocketChannelFactory cf;
 
 	private volatile Channel outboundChannel;
-
-	final Object trafficLock = new Object();
-
-	static {
-		try {
-			printWriter = new PrintWriter(new FileWriter("/data/socks/c.log"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 
 	public SocksServerConnectHandler(ClientSocketChannelFactory cf) {
 		this.cf = cf;
@@ -82,7 +67,7 @@ public class SocksServerConnectHandler extends SimpleChannelUpstreamHandler {
 		f.addListener(new ChannelFutureListener() {
 			public void operationComplete(ChannelFuture future) throws Exception {
 				if (future.isSuccess()) {
-                    connectionStatus.setStatus(ConnectionStatus.SUCCESS);
+                    connectionStatus.start();
 					// decide protocol by port
 					ChannelUpstreamHandler decoder = CodecSelector.decoder(remoteAddress, null);
 					if (decoder != null) {

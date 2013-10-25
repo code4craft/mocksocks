@@ -33,6 +33,7 @@ public class OutboundHandler extends SimpleChannelUpstreamHandler {
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		closeOnFlush(e.getChannel());
+        inboundChannel.close();
 	}
 
 	/**

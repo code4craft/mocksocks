@@ -15,7 +15,8 @@ import java.awt.event.KeyEvent;
  * @author yihua.huang@dianping.com
  */
 public class Main {
-	private JList list1;
+    public static final int REFRESH_TIME = 1000;
+    private JList list1;
 	private JPanel panel;
 	private JButton startButton;
 	private JButton stopButton;
@@ -30,7 +31,7 @@ public class Main {
 	final SocksProxy socksProxy = new SocksProxy();
 
 	public Main() {
-		listModel = new ConnectionStatusListModel(2000);
+		listModel = new ConnectionStatusListModel(REFRESH_TIME);
 		list1.setModel(listModel);
 		startButton.addActionListener(new ActionListener() {
 			@Override

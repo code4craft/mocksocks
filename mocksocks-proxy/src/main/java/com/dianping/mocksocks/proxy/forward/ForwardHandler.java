@@ -9,7 +9,7 @@ import org.jboss.netty.channel.*;
  * 
  * @author yihua.huang@dianping.com
  */
-public class ForwardHandler extends OutboundHandler {
+public class ForwardHandler extends OutboundHandler implements ChannelDownstreamHandler {
 
 	private final ConnectionStatus connectionStatus;
 
@@ -41,4 +41,14 @@ public class ForwardHandler extends OutboundHandler {
 		return connectionStatus;
 	}
 
+	@Override
+	public void handleDownstream(ChannelHandlerContext ctx, ChannelEvent e) throws Exception {
+		if (e instanceof MessageEvent) {
+			Object message = ((MessageEvent) e).getMessage();
+			if (message instanceof ChannelBuffer) {
+				connectionStatus.addBytesSend(((ChannelBuffer) message).readableBytes());
+			}
+		}
+        ctx.sendDownstream(e);
+	}
 }

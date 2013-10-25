@@ -25,21 +25,24 @@ public class ConnectionStatus {
 
 	public static final String FAIL = "fail";
 
+	public static final String CONNECTED = "connected";
+
 	public ConnectionStatus(Channel channel) {
 		this.channel = channel;
 	}
 
-    public ConnectionStatus() {
-    }
+	public ConnectionStatus() {
+	}
 
 	public long getStartTime() {
 		return startTime;
 	}
 
-    public ConnectionStatus start(){
-        this.startTime = System.currentTimeMillis();
-        return this;
-    }
+	public ConnectionStatus start() {
+		this.startTime = System.currentTimeMillis();
+		this.status = CONNECTED;
+		return this;
+	}
 
 	public void setStartTime(long startTime) {
 		this.startTime = startTime;
@@ -81,9 +84,9 @@ public class ConnectionStatus {
 		return status;
 	}
 
-    public InetSocketAddress getAddress(){
-        return (InetSocketAddress)channel.getRemoteAddress();
-    }
+	public InetSocketAddress getAddress() {
+		return (InetSocketAddress) channel.getRemoteAddress();
+	}
 
 	public ConnectionStatus setStatus(String status) {
 		this.status = status;
@@ -96,11 +99,11 @@ public class ConnectionStatus {
 		return this;
 	}
 
-    public void setChannel(Channel channel) {
-        this.channel = channel;
-    }
+	public void setChannel(Channel channel) {
+		this.channel = channel;
+	}
 
-    @Override
+	@Override
 	public String toString() {
 		return "ConnectionStatus{remote=" + channel.getRemoteAddress() + ",startTime="
 				+ StatusFormatter.formatTimeStamp(startTime) + ", endTime=" + StatusFormatter.formatTimeStamp(endTime)
