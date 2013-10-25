@@ -3,6 +3,7 @@ package com.dianping.mocksocks.proxy.forward;
 import com.dianping.mocksocks.proxy.monitor.ConnectionMonitor;
 import com.dianping.mocksocks.proxy.monitor.ConnectionStatus;
 import com.dianping.mocksocks.proxy.protocals.CodecSelector;
+import com.dianping.mocksocks.proxy.rules.RedirectRules;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.*;
 import org.jboss.netty.channel.socket.ClientSocketChannelFactory;
@@ -41,8 +42,8 @@ public class SocksServerConnectHandler extends SimpleChannelUpstreamHandler {
 		final ClientBootstrap cb = new ClientBootstrap(cf);
 		cb.setOption("keepAlive", true);
 		cb.setOption("tcpNoDelay", true);
-		final InetSocketAddress remoteAddress = new InetSocketAddress(socksCmdRequest.getHost(),
-				socksCmdRequest.getPort());
+		final InetSocketAddress remoteAddress = RedirectRules.getInstance().getRedirectAddress(new InetSocketAddress(socksCmdRequest.getHost(),
+				socksCmdRequest.getPort()));
         final ConnectionStatus connectionStatus = new ConnectionStatus();
         cb.setPipelineFactory(new ChannelPipelineFactory() {
             @Override

@@ -25,7 +25,7 @@ public class Main {
 	private JTextField textField1;
 	private JButton filterButton;
 	private Menu menu;
-	private RedirectRules redirectRules;
+	private RedirectRulesDialog redirectRulesDialog;
 
 	private ConnectionStatusListModel listModel;
 	final SocksProxy socksProxy = new SocksProxy();
@@ -70,18 +70,18 @@ public class Main {
 		menu.getRedirectRules().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-                getRedirectRules().setVisible(true);
-                getRedirectRules().setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+                getRedirectRulesDialog().setVisible(true);
+                getRedirectRulesDialog().setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 			}
 		});
 	}
 
-	public RedirectRules getRedirectRules() {
-		if (redirectRules == null) {
-			redirectRules = new RedirectRules();
-            redirectRules.pack();
+	public RedirectRulesDialog getRedirectRulesDialog() {
+		if (redirectRulesDialog == null) {
+			redirectRulesDialog = new RedirectRulesDialog();
+            redirectRulesDialog.pack();
 		}
-		return redirectRules;
+		return redirectRulesDialog;
 	}
 
 	private void fireFilter() {
