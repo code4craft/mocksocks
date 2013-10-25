@@ -1,9 +1,11 @@
 package com.dianping.mocksocks.gui.gui;
 
+import com.dianping.mocksocks.proxy.dao.RulesDao;
 import com.dianping.mocksocks.proxy.rules.RulesContainer;
 
 import javax.swing.*;
 import java.awt.event.*;
+import java.sql.SQLException;
 
 public class RedirectRulesDialog extends JDialog {
 	private JPanel contentPane;
@@ -12,15 +14,15 @@ public class RedirectRulesDialog extends JDialog {
 	private JTextArea textArea1;
 
 	public RedirectRulesDialog() {
-		setContentPane(contentPane);
+        try {
+            String redirectRules = new RulesDao().getByType(RulesDao.TYPE_REDIRECT);
+            textArea1.setText(redirectRules);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        setContentPane(contentPane);
 		setModal(true);
 		getRootPane().setDefaultButton(buttonOK);
-
-		buttonOK.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				onOK();
-			}
-		});
 
 		buttonCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -47,6 +49,8 @@ public class RedirectRulesDialog extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				try {
                     RulesContainer.getInstance().setRedirectRules(RulesContainer.parse(textArea1.getText()));
+                    new RulesDao().setByType(RulesDao.TYPE_REDIRECT, textArea1.getText());
+                    dispose();
 				} catch (Exception ex) {
                     ex.printStackTrace();
                     JOptionPane.showConfirmDialog(contentPane, ex);
