@@ -1,8 +1,8 @@
-package com.dianping.mocksocks.gui;
+package com.dianping.mocksocks.gui.gui;
 
 import com.dianping.mocksocks.gui.data.ConnectionStatusListModel;
-import com.dianping.mocksocks.gui.data.HostFilter;
 import com.dianping.mocksocks.proxy.monitor.ConnectionMonitor;
+import com.dianping.mocksocks.proxy.rules.filter.ConnectionStatusHostFilter;
 import com.dianping.mocksocks.proxy.socks.SocksProxy;
 
 import javax.swing.*;
@@ -23,6 +23,8 @@ public class Main {
 	private JComboBox comboBox;
 	private JTextField textField1;
 	private JButton filterButton;
+	private Menu menu;
+	private RedirectRules redirectRules;
 
 	private ConnectionStatusListModel listModel;
 	final SocksProxy socksProxy = new SocksProxy();
@@ -46,7 +48,7 @@ public class Main {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				listModel.clear();
-				ConnectionMonitor.clear();
+				ConnectionMonitor.getInstance().clear();
 			}
 		});
 		filterButton.addActionListener(new ActionListener() {
@@ -63,6 +65,22 @@ public class Main {
 				}
 			}
 		});
+		menu = new Menu();
+		menu.getRedirectRules().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+                getRedirectRules().setVisible(true);
+                getRedirectRules().setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+			}
+		});
+	}
+
+	public RedirectRules getRedirectRules() {
+		if (redirectRules == null) {
+			redirectRules = new RedirectRules();
+            redirectRules.pack();
+		}
+		return redirectRules;
 	}
 
 	private void fireFilter() {
@@ -70,7 +88,7 @@ public class Main {
 		String filterValue = textField1.getText();
 		if ("host".equals(filterType)) {
 			try {
-				listModel.setFilter(new HostFilter(filterValue));
+				listModel.setFilter(new ConnectionStatusHostFilter(filterValue));
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				JOptionPane.showConfirmDialog(panel, ex);
@@ -80,7 +98,9 @@ public class Main {
 
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("MockSocks");
-		frame.setContentPane(new Main().panel);
+		Main main = new Main();
+		frame.setContentPane(main.panel);
+		frame.setJMenuBar(main.menu);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setVisible(true);

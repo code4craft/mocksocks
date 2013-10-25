@@ -12,44 +12,52 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ConnectionMonitor {
 
-	private static final Map<Channel, ConnectionStatus> connectionStatuses = new ConcurrentHashMap<Channel, ConnectionStatus>();
+	private static final ConnectionMonitor INSTANCE = new ConnectionMonitor();
 
-	static {
-//		new Thread(new Runnable() {
-//			@Override
-//			public void run() {
-//				while (true) {
-//					try {
-//						Thread.sleep(5000);
-//					} catch (InterruptedException e) {
-//						e.printStackTrace();
-//					}
-//					output();
-//				}
-//			}
-//		}).start();
+	public static ConnectionMonitor getInstance() {
+		return INSTANCE;
 	}
 
-	public static ConnectionStatus getStatus(Channel channel) {
+    private ConnectionMonitor(){
+    }
+
+	private final Map<Channel, ConnectionStatus> connectionStatuses = new ConcurrentHashMap<Channel, ConnectionStatus>();
+
+	static {
+		// new Thread(new Runnable() {
+		// @Override
+		// public void run() {
+		// while (true) {
+		// try {
+		// Thread.sleep(5000);
+		// } catch (InterruptedException e) {
+		// e.printStackTrace();
+		// }
+		// output();
+		// }
+		// }
+		// }).start();
+	}
+
+	public ConnectionStatus getStatus(Channel channel) {
 		ConnectionStatus connectionStatus = connectionStatuses.get(channel);
-		if (connectionStatus == null) {
-			synchronized (ConnectionMonitor.class) {
-				connectionStatus = new ConnectionStatus(channel);
-				connectionStatuses.put(channel, connectionStatus);
-			}
-		}
 		return connectionStatus;
 	}
 
-    public static List<ConnectionStatus> status(){
-        return new ArrayList<ConnectionStatus>(connectionStatuses.values());
+    public void putStatus(Channel channel,ConnectionStatus connectionStatus) {
+        connectionStatuses.put(channel,connectionStatus);
     }
 
-    public static void clear(){
-        connectionStatuses.clear();
-    }
+	public List<ConnectionStatus> status() {
+		return new ArrayList<ConnectionStatus>(connectionStatuses.values());
+	}
 
-	public static void output() {
+	public void clear() {
+		connectionStatuses.clear();
+	}
+
+    @Deprecated
+	public void output() {
 		System.out.println("==============================================================================");
 		for (Map.Entry<Channel, ConnectionStatus> connectionStatusEntry : connectionStatuses.entrySet()) {
 			if (connectionStatusEntry.getValue().getEndTime() != 0l

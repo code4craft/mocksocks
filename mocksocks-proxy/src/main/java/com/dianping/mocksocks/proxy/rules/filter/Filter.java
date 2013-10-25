@@ -1,4 +1,4 @@
-package com.dianping.mocksocks.gui.data;
+package com.dianping.mocksocks.proxy.rules.filter;
 
 /**
  * @author yihua.huang@dianping.com

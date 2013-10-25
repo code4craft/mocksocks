@@ -15,6 +15,7 @@
  */
 package com.dianping.mocksocks.proxy.socks;
 
+import com.dianping.mocksocks.proxy.forward.SocksServerConnectHandler;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
@@ -53,7 +54,7 @@ public final class SocksServerHandler extends SimpleChannelUpstreamHandler {
             SocksCmdRequest req = (SocksCmdRequest) socksRequest;
             if (req.getCmdType() == SocksMessage.CmdType.CONNECT) {
                 //添加处理连接的handler
-                ctx.getPipeline().addLast(com.dianping.mocksocks.proxy.socks.SocksServerConnectHandler.getName(), new com.dianping.mocksocks.proxy.socks.SocksServerConnectHandler(cf));
+                ctx.getPipeline().addLast(SocksServerConnectHandler.getName(), new SocksServerConnectHandler(cf));
                 ctx.getPipeline().remove(this);
             } else {
                 ctx.getChannel().close();

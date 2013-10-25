@@ -17,7 +17,7 @@ public class ConnectionStatus {
 
 	private int bytesReceive;
 
-	private final Channel channel;
+	private Channel channel;
 
 	private String status;
 
@@ -27,12 +27,19 @@ public class ConnectionStatus {
 
 	public ConnectionStatus(Channel channel) {
 		this.channel = channel;
-		this.startTime = System.currentTimeMillis();
 	}
+
+    public ConnectionStatus() {
+    }
 
 	public long getStartTime() {
 		return startTime;
 	}
+
+    public ConnectionStatus start(){
+        this.startTime = System.currentTimeMillis();
+        return this;
+    }
 
 	public void setStartTime(long startTime) {
 		this.startTime = startTime;
@@ -89,7 +96,11 @@ public class ConnectionStatus {
 		return this;
 	}
 
-	@Override
+    public void setChannel(Channel channel) {
+        this.channel = channel;
+    }
+
+    @Override
 	public String toString() {
 		return "ConnectionStatus{remote=" + channel.getRemoteAddress() + ",startTime="
 				+ StatusFormatter.formatTimeStamp(startTime) + ", endTime=" + StatusFormatter.formatTimeStamp(endTime)
