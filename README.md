@@ -22,7 +22,7 @@ MockSocks分为几个部分：
 
 	通过替换NIO SocketChannel实现，达到为NIO设置代理的效果。此部分使用javaagent达到不修改业务代码的目的，目前已开发完成，代码在`mocksocks-client`模块内。只需在程序启动时添加JVM参数即可：
 	
-	-javaagent:/path/to/mocksocks-client.jar -DmockFile=/path/to/mocksocks-client.jar
+		-javaagent:/path/to/mocksocks-client.jar -DmockFile=/path/to/mocksocks-client.jar
 	
 * ### Socks代理服务器
 
