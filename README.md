@@ -28,9 +28,26 @@ MockSocks分为几个部分：
 
 	提供Socks代理服务，保证一定性能的情况下，提供良好的扩展接口。此部分基于Netty开发，目前已开发完成，代码在`mocksocks-proxy`模块内。
 	
-* ### 用户界面(30%)
+* ### 用户界面及功能(30%)
 
-	提供界面，让用户可以更方便的监控及修改。这部分使用swing实现，目前完成了连接显示、过滤、重定向模块。考虑引入h2做数据存储，spring做依赖管理。完成度:30%?
+	提供界面，让用户可以更方便的监控及修改。这部分使用swing实现，目前完成了连接显示、过滤、重定向模块。引入了h2做数据存储。完成度:40%?
+	
+	* ####流量录制
+	  按照目标地址=>连接=>协议内容来区分。
+	  
+	  某些协议是无状态的，例如Http/RPC/大部分nosql，这种是不是一个连接无所谓。
+	  
+	  有些协议是有状态的，例如ftp/mysql，这种必须要对同一连接，并且有时间顺序。
+	  
+	  一些已有的解决方案：
+	  
+	  wiredshark是显示TCP包，并可以follow sequence。Charles/fiddler是基于HTTP，每个HTTP协议体显示一个。倾向于这一种。可以先从无状态协议入手做。
+	  
+	  无状态协议：
+	  
+	  支持单连接串行Reuquest/Response，不支持pipeline。
+	 
+	 ![proxy][2]
 
 * ### 协议编码/解码(未开始)
 
@@ -42,3 +59,4 @@ MockSocks分为几个部分：
 
 
   [1]: http://static.oschina.net/uploads/space/2013/1025/202527_iLkr_190591.png
+  [2]: http://static.oschina.net/uploads/space/2013/1026/224012_KNGE_190591.png

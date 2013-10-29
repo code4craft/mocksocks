@@ -21,7 +21,7 @@ public class ForwardHandler extends OutboundHandler implements ChannelDownstream
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, final MessageEvent e) throws Exception {
 		final ChannelBuffer msg = (ChannelBuffer) e.getMessage();
-		connectionStatus.addBytesReceive(msg.readableBytes());
+		connectionStatus.response(msg);
 		super.messageReceived(ctx, e);
 	}
 
@@ -46,9 +46,9 @@ public class ForwardHandler extends OutboundHandler implements ChannelDownstream
 		if (e instanceof MessageEvent) {
 			Object message = ((MessageEvent) e).getMessage();
 			if (message instanceof ChannelBuffer) {
-				connectionStatus.addBytesSend(((ChannelBuffer) message).readableBytes());
+				connectionStatus.request((ChannelBuffer) message);
 			}
 		}
-        ctx.sendDownstream(e);
+		ctx.sendDownstream(e);
 	}
 }

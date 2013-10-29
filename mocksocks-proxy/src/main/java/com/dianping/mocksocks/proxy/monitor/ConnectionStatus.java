@@ -1,8 +1,13 @@
 package com.dianping.mocksocks.proxy.monitor;
 
+import com.dianping.mocksocks.proxy.message.Exchange;
+import com.dianping.mocksocks.proxy.message.Message;
+import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author yihua.huang@dianping.com
@@ -20,6 +25,10 @@ public class ConnectionStatus {
 	private Channel channel;
 
 	private String status;
+
+	private List<Exchange> messages = new ArrayList<Exchange>();
+
+	private Exchange current;
 
 	public static final String SUCCESS = "success";
 
@@ -76,12 +85,40 @@ public class ConnectionStatus {
 		this.bytesReceive = bytesReceive;
 	}
 
+	public synchronized void request(ChannelBuffer channelBuffer) {
+		this.bytesSend += channelBuffer.readableBytes();
+		if (current == null) {
+			current = new Exchange();
+			current.setRequest(new Message(channelBuffer, Message.MessageType.Request));
+		} else if (current.getRequest() == null) {
+			current.setRequest(new Message(channelBuffer, Message.MessageType.Request));
+		} else if (current.getRequest() != null && current.getResponse() == null) {
+			current.getRequest().addChannelBuffer(channelBuffer);
+		} else if (current.getResponse() != null) {
+			messages.add(current);
+		}
+	}
+
+	public synchronized void response(ChannelBuffer channelBuffer) {
+		this.bytesReceive += channelBuffer.readableBytes();
+		if (current == null || current.getRequest() == null) {
+		} else if (current.getRequest() != null && current.getResponse() == null) {
+			current.setResponse(new Message(channelBuffer, Message.MessageType.Response));
+		} else if (current.getResponse() != null) {
+			current.getResponse().addChannelBuffer(channelBuffer);
+		}
+	}
+
 	public synchronized void addBytesReceive(long bytesReceive) {
 		this.bytesReceive += bytesReceive;
 	}
 
 	public String getStatus() {
 		return status;
+	}
+
+	public List<Exchange> getMessages() {
+		return messages;
 	}
 
 	public InetSocketAddress getAddress() {
@@ -95,6 +132,9 @@ public class ConnectionStatus {
 
 	public ConnectionStatus close() {
 		this.status = "closed";
+		if (current != null) {
+			messages.add(current);
+		}
 		endTime = System.currentTimeMillis();
 		return this;
 	}
