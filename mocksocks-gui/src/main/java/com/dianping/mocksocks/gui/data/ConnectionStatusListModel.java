@@ -15,6 +15,8 @@ public class ConnectionStatusListModel extends AbstractListModel {
 
 	private List<String> display = new ArrayList<String>();
 
+    private List<ConnectionStatus> connectionStatuses = new ArrayList<ConnectionStatus>();
+
 	private List<Filter<ConnectionStatus>> filters = new ArrayList<Filter<ConnectionStatus>>();
 
 	public ConnectionStatusListModel(final int refreshTime) {
@@ -36,6 +38,7 @@ public class ConnectionStatusListModel extends AbstractListModel {
 
 	public synchronized void update() {
 		display.clear();
+        connectionStatuses.clear();
 		connectionLoop: for (ConnectionStatus connectionStatus : ConnectionMonitor.getInstance().status()) {
 			if (filters.size() > 0) {
 				for (Filter<ConnectionStatus> filter : filters) {
@@ -44,6 +47,7 @@ public class ConnectionStatusListModel extends AbstractListModel {
 					}
 				}
 			}
+            connectionStatuses.add(connectionStatus);
 			display.add(connectionStatus.toString());
 		}
 		fireContentsChanged(this, 0, display.size());
@@ -68,7 +72,11 @@ public class ConnectionStatusListModel extends AbstractListModel {
 		return display.get(index);
 	}
 
-	public void clear() {
+    public ConnectionStatus getConnectionStatus(int index) {
+        return connectionStatuses.get(index);
+    }
+
+    public void clear() {
 		display.clear();
 		fireContentsChanged(this, 0, 1);
 	}

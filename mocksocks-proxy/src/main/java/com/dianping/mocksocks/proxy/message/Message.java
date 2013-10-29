@@ -1,5 +1,6 @@
 package com.dianping.mocksocks.proxy.message;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
@@ -19,6 +20,12 @@ public class Message {
 	private MessageType type;
 
 	public Message(ChannelBuffer channelBuffer, MessageType type) {
+		this.channelBuffer = channelBuffer;
+		this.type = type;
+	}
+
+	public Message(ChannelBuffer channelBuffer, MessageType type, String protocol) {
+		this.protocol = protocol;
 		this.channelBuffer = channelBuffer;
 		this.type = type;
 	}
@@ -49,5 +56,18 @@ public class Message {
 
 	public void setType(MessageType type) {
 		this.type = type;
+	}
+
+	@Override
+	public String toString() {
+		return "Message{" + "protocol='" + protocol + '\'' + ", channelBuffer=" + outputBuffer() + ", type=" + type
+				+ '}';
+	}
+
+	private String outputBuffer() {
+		if ("http".equalsIgnoreCase(protocol)) {
+            return StringUtils.substringBefore(channelBuffer.toString("utf-8"),"\n");
+		}
+		return "";
 	}
 }

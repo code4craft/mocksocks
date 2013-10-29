@@ -24,4 +24,12 @@ public class Exchange {
     public void setResponse(Message response) {
         this.response = response;
     }
+
+    @Override
+    public String toString() {
+        return "Exchange{" +
+                "request=" + request +
+                ", response=" + response +
+                '}';
+    }
 }

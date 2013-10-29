@@ -42,33 +42,35 @@ public class SocksServerConnectHandler extends SimpleChannelUpstreamHandler {
 		final ClientBootstrap cb = new ClientBootstrap(cf);
 		cb.setOption("keepAlive", true);
 		cb.setOption("tcpNoDelay", true);
-		final InetSocketAddress remoteAddress = RulesContainer.getInstance().getRedirectAddress(new InetSocketAddress(socksCmdRequest.getHost(),
-				socksCmdRequest.getPort()));
-        final ConnectionStatus connectionStatus = new ConnectionStatus();
-        cb.setPipelineFactory(new ChannelPipelineFactory() {
-            @Override
-            public ChannelPipeline getPipeline() throws Exception {
-                ChannelPipeline pipeline = Channels.pipeline();
-                // 外部server数据转发到client
-                ForwardHandler handler = new ForwardHandler(inboundChannel, socksCmdRequest.getHost()
-                        + ":" + socksCmdRequest.getPort() + "<<<", connectionStatus);
-                pipeline.addLast(ForwardHandler.class.getName(), handler);
-                return pipeline;
-            }
-        });
+		final InetSocketAddress remoteAddress = RulesContainer.getInstance().getRedirectAddress(
+				new InetSocketAddress(socksCmdRequest.getHost(), socksCmdRequest.getPort()));
+		final ConnectionStatus connectionStatus = new ConnectionStatus();
+		if (socksCmdRequest.getPort() == 80) {
+			connectionStatus.setProtocol("http");
+		}
+		cb.setPipelineFactory(new ChannelPipelineFactory() {
+			@Override
+			public ChannelPipeline getPipeline() throws Exception {
+				ChannelPipeline pipeline = Channels.pipeline();
+				// 外部server数据转发到client
+				ForwardHandler handler = new ForwardHandler(inboundChannel, socksCmdRequest.getHost() + ":"
+						+ socksCmdRequest.getPort() + "<<<", connectionStatus);
+				pipeline.addLast(ForwardHandler.class.getName(), handler);
+				return pipeline;
+			}
+		});
 
-        ChannelFuture f = cb.connect(remoteAddress);
-        outboundChannel = f.getChannel();
-        connectionStatus.setChannel(outboundChannel);
-        ConnectionMonitor.getInstance().putStatus(outboundChannel,connectionStatus);
-        // System.out.println("connect to " + socksCmdRequest.getHost() + " : "
+		ChannelFuture f = cb.connect(remoteAddress);
+		outboundChannel = f.getChannel();
+		connectionStatus.setChannel(outboundChannel);
+		ConnectionMonitor.getInstance().putStatus(outboundChannel, connectionStatus);
+		// System.out.println("connect to " + socksCmdRequest.getHost() + " : "
 		// + socksCmdRequest.getPort());
-
 
 		f.addListener(new ChannelFutureListener() {
 			public void operationComplete(ChannelFuture future) throws Exception {
 				if (future.isSuccess()) {
-                    connectionStatus.start();
+					connectionStatus.start();
 					// decide protocol by port
 					ChannelUpstreamHandler decoder = CodecSelector.decoder(remoteAddress, null);
 					if (decoder != null) {
@@ -93,7 +95,7 @@ public class SocksServerConnectHandler extends SimpleChannelUpstreamHandler {
 					// inboundChannel.getPipeline().addLast("output", new
 					// OutPutHandler());
 				} else {
-                    connectionStatus.setStatus(ConnectionStatus.FAIL);
+					connectionStatus.setStatus(ConnectionStatus.FAIL);
 					inboundChannel.write(new SocksCmdResponse(SocksMessage.CmdStatus.FAILURE, socksCmdRequest
 							.getAddressType()));
 					inboundChannel.close();

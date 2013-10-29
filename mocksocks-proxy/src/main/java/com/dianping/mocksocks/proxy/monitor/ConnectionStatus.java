@@ -36,6 +36,8 @@ public class ConnectionStatus {
 
 	public static final String CONNECTED = "connected";
 
+	private String protocol;
+
 	public ConnectionStatus(Channel channel) {
 		this.channel = channel;
 	}
@@ -89,9 +91,9 @@ public class ConnectionStatus {
 		this.bytesSend += channelBuffer.readableBytes();
 		if (current == null) {
 			current = new Exchange();
-			current.setRequest(new Message(channelBuffer, Message.MessageType.Request));
+			current.setRequest(new Message(channelBuffer, Message.MessageType.Request, protocol));
 		} else if (current.getRequest() == null) {
-			current.setRequest(new Message(channelBuffer, Message.MessageType.Request));
+			current.setRequest(new Message(channelBuffer, Message.MessageType.Request, protocol));
 		} else if (current.getRequest() != null && current.getResponse() == null) {
 			current.getRequest().addChannelBuffer(channelBuffer);
 		} else if (current.getResponse() != null) {
@@ -103,7 +105,7 @@ public class ConnectionStatus {
 		this.bytesReceive += channelBuffer.readableBytes();
 		if (current == null || current.getRequest() == null) {
 		} else if (current.getRequest() != null && current.getResponse() == null) {
-			current.setResponse(new Message(channelBuffer, Message.MessageType.Response));
+			current.setResponse(new Message(channelBuffer, Message.MessageType.Response, protocol));
 		} else if (current.getResponse() != null) {
 			current.getResponse().addChannelBuffer(channelBuffer);
 		}
@@ -141,6 +143,14 @@ public class ConnectionStatus {
 
 	public void setChannel(Channel channel) {
 		this.channel = channel;
+	}
+
+	public String getProtocol() {
+		return protocol;
+	}
+
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
 	}
 
 	@Override
