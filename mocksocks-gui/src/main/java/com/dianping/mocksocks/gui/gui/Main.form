@@ -129,7 +129,7 @@
       </tabbedpane>
       <toolbar id="d592c" binding="toolBar">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
             <preferred-size width="-1" height="20"/>
           </grid>
           <forms defaultalign-horz="false"/>
@@ -138,7 +138,7 @@
           <borderPainted value="true"/>
           <floatable value="false"/>
           <font/>
-          <margin top="0" left="0" bottom="0" right="0"/>
+          <margin top="0" left="30" bottom="0" right="30"/>
           <orientation value="0"/>
         </properties>
         <border type="none"/>
@@ -146,22 +146,45 @@
           <component id="e607c" class="javax.swing.JButton" binding="startButton" default-binding="true">
             <constraints/>
             <properties>
-              <icon value="icon/arrow-right-3.png"/>
+              <contentAreaFilled value="true"/>
+              <font name="Monotype Sorts"/>
+              <horizontalAlignment value="0"/>
+              <icon value="icon/record-start.png"/>
+              <margin top="0" left="5" bottom="0" right="5"/>
+              <maximumSize width="95" height="44"/>
+              <minimumSize width="95" height="44"/>
+              <preferredSize width="95" height="44"/>
               <text value="Start"/>
+              <toolTipText value="Start recording"/>
+              <verticalAlignment value="0"/>
+              <visible value="false"/>
             </properties>
           </component>
           <component id="36216" class="javax.swing.JButton" binding="stopButton" default-binding="true">
             <constraints/>
             <properties>
-              <icon value="icon/media-playback-stop.png"/>
+              <font name="Monotype Sorts"/>
+              <icon value="icon/record-stop.png"/>
+              <margin top="0" left="5" bottom="0" right="5"/>
+              <maximumSize width="95" height="44"/>
+              <minimumSize width="95" height="44"/>
+              <preferredSize width="95" height="44"/>
               <text value="Stop"/>
+              <toolTipText value="Stop recording"/>
+              <visible value="true"/>
             </properties>
           </component>
           <component id="e1535" class="javax.swing.JButton" binding="clearButton" default-binding="true">
             <constraints/>
             <properties>
-              <icon value="icon/edit-delete-2.png"/>
+              <font name="Monotype Sorts"/>
+              <icon value="icon/status-clear.png"/>
+              <margin top="0" left="5" bottom="0" right="5"/>
+              <maximumSize width="95" height="44"/>
+              <minimumSize width="95" height="44"/>
+              <preferredSize width="95" height="44"/>
               <text value="Clear"/>
+              <toolTipText value="Clear all status"/>
             </properties>
           </component>
         </children>

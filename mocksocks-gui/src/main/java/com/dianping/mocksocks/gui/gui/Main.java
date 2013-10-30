@@ -2,6 +2,7 @@ package com.dianping.mocksocks.gui.gui;
 
 import com.dianping.mocksocks.gui.data.ConnectionStatusListModel;
 import com.dianping.mocksocks.gui.data.MessageListModel;
+import com.dianping.mocksocks.proxy.config.Configs;
 import com.dianping.mocksocks.proxy.message.Exchange;
 import com.dianping.mocksocks.proxy.monitor.ConnectionMonitor;
 import com.dianping.mocksocks.proxy.monitor.ConnectionStatus;
@@ -37,17 +38,24 @@ public class Main {
 	public Main() {
 		listModel = new ConnectionStatusListModel(REFRESH_TIME);
 		listConnection.setModel(listModel);
+        socksProxy.start();
 		startButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				socksProxy.start();
+                Configs.getInstance().setRecord(true);
+                startButton.setVisible(false);
+                stopButton.setVisible(true);
+                stopButton.grabFocus();
 			}
 		});
 		stopButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				socksProxy.stop();
-			}
+                Configs.getInstance().setRecord(false);
+                stopButton.setVisible(false);
+                startButton.setVisible(true);
+                startButton.grabFocus();
+            }
 		});
 		clearButton.addActionListener(new ActionListener() {
 			@Override
