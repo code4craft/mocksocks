@@ -1,5 +1,6 @@
 package com.dianping.mocksocks.proxy.forward;
 
+import com.dianping.mocksocks.proxy.config.Configs;
 import com.dianping.mocksocks.proxy.monitor.ConnectionMonitor;
 import com.dianping.mocksocks.proxy.monitor.ConnectionStatus;
 import com.dianping.mocksocks.proxy.protocals.CodecSelector;
@@ -63,7 +64,9 @@ public class SocksServerConnectHandler extends SimpleChannelUpstreamHandler {
 		ChannelFuture f = cb.connect(remoteAddress);
 		outboundChannel = f.getChannel();
 		connectionStatus.setChannel(outboundChannel);
-		ConnectionMonitor.getInstance().putStatus(outboundChannel, connectionStatus);
+		if (Configs.getInstance().isRecord()) {
+			ConnectionMonitor.getInstance().putStatus(outboundChannel, connectionStatus);
+		}
 		// System.out.println("connect to " + socksCmdRequest.getHost() + " : "
 		// + socksCmdRequest.getPort());
 

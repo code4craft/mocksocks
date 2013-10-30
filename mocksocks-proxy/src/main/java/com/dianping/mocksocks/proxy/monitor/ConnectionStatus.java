@@ -1,5 +1,6 @@
 package com.dianping.mocksocks.proxy.monitor;
 
+import com.dianping.mocksocks.proxy.config.Configs;
 import com.dianping.mocksocks.proxy.message.Exchange;
 import com.dianping.mocksocks.proxy.message.Message;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -88,6 +89,9 @@ public class ConnectionStatus {
 	}
 
 	public synchronized void request(ChannelBuffer channelBuffer) {
+		if (!Configs.getInstance().isRecord()) {
+			return;
+		}
 		this.bytesSend += channelBuffer.readableBytes();
 		if (current == null) {
 			current = new Exchange();
@@ -102,6 +106,9 @@ public class ConnectionStatus {
 	}
 
 	public synchronized void response(ChannelBuffer channelBuffer) {
+		if (!Configs.getInstance().isRecord()) {
+			return;
+		}
 		this.bytesReceive += channelBuffer.readableBytes();
 		if (current == null || current.getRequest() == null) {
 		} else if (current.getRequest() != null && current.getResponse() == null) {
