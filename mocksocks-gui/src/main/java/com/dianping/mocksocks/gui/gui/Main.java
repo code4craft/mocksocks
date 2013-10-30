@@ -2,6 +2,7 @@ package com.dianping.mocksocks.gui.gui;
 
 import com.dianping.mocksocks.gui.data.ConnectionStatusListModel;
 import com.dianping.mocksocks.gui.data.MessageListModel;
+import com.dianping.mocksocks.proxy.message.Exchange;
 import com.dianping.mocksocks.proxy.monitor.ConnectionMonitor;
 import com.dianping.mocksocks.proxy.monitor.ConnectionStatus;
 import com.dianping.mocksocks.proxy.rules.filter.ConnectionStatusHostFilter;
@@ -27,6 +28,7 @@ public class Main {
 	private JList listMessage;
 	private Menu menu;
 	private RedirectRulesDialog redirectRulesDialog;
+    private MessageDetailDialog messageDetailDialog;
 
 	private ConnectionStatusListModel listModel;
 	final SocksProxy socksProxy = new SocksProxy();
@@ -72,7 +74,6 @@ public class Main {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				getRedirectRulesDialog().setVisible(true);
-				getRedirectRulesDialog().setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 			}
 		});
 		listConnection.addMouseListener(new MouseAdapter() {
@@ -86,14 +87,33 @@ public class Main {
                 }
 			}
 		});
+        listMessage.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() > 1) {
+                    Exchange exchange = (Exchange) listMessage.getSelectedValue();
+                    getMessageDetailDialog().setExchange(exchange);
+                    getMessageDetailDialog().setVisible(true);
+                }
+            }
+        });
 	}
 
 	public RedirectRulesDialog getRedirectRulesDialog() {
 		if (redirectRulesDialog == null) {
 			redirectRulesDialog = new RedirectRulesDialog();
 			redirectRulesDialog.pack();
+            redirectRulesDialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		}
 		return redirectRulesDialog;
+	}
+	public MessageDetailDialog getMessageDetailDialog() {
+		if (messageDetailDialog == null) {
+            messageDetailDialog = new MessageDetailDialog();
+            messageDetailDialog.pack();
+            messageDetailDialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+		}
+		return messageDetailDialog;
 	}
 
 	private void fireFilter() {

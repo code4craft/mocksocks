@@ -1,0 +1,52 @@
+package com.dianping.mocksocks.gui.gui;
+
+import com.dianping.mocksocks.proxy.message.Exchange;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class MessageDetailDialog extends JDialog {
+    private JPanel contentPane;
+    private JButton buttonOK;
+    private JButton buttonCancel;
+    private JTabbedPane tabbedPane1;
+    private JEditorPane editorRequest;
+    private JEditorPane editorResponse;
+    private Exchange exchange;
+
+    public MessageDetailDialog() {
+        setContentPane(contentPane);
+        setModal(true);
+        getRootPane().setDefaultButton(buttonOK);
+
+        buttonOK.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                onOK();
+            }
+        });
+        buttonCancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                onOK();
+            }
+        });
+    }
+
+    public void setExchange(Exchange exchange) {
+        this.exchange = exchange;
+        editorRequest.setText(exchange.getRequest().outputBuffer());
+        editorResponse.setText(exchange.getResponse().outputBuffer());
+    }
+
+    private void onOK() {
+// add your code here
+        dispose();
+    }
+
+    public static void main(String[] args) {
+        MessageDetailDialog dialog = new MessageDetailDialog();
+        dialog.pack();
+        dialog.setVisible(true);
+        System.exit(0);
+    }
+}
