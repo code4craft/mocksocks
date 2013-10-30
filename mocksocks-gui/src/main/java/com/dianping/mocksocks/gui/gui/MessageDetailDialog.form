@@ -5,7 +5,9 @@
     <constraints>
       <xy x="48" y="54" width="668" height="558"/>
     </constraints>
-    <properties/>
+    <properties>
+      <font/>
+    </properties>
     <border type="none"/>
     <children>
       <grid id="94766" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -63,7 +65,9 @@
                 <preferred-size width="600" height="400"/>
               </grid>
             </constraints>
-            <properties/>
+            <properties>
+              <font/>
+            </properties>
             <border type="none"/>
             <children>
               <grid id="a7746" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -81,6 +85,7 @@
                       </grid>
                     </constraints>
                     <properties>
+                      <font/>
                       <tabPlacement value="3"/>
                     </properties>
                     <border type="none"/>
@@ -119,7 +124,9 @@
                         <children>
                           <component id="da24e" class="javax.swing.JEditorPane" binding="editorRequestHex">
                             <constraints/>
-                            <properties/>
+                            <properties>
+                              <font name="Courier"/>
+                            </properties>
                           </component>
                         </children>
                       </scrollpane>
@@ -173,6 +180,21 @@
                           </scrollpane>
                         </children>
                       </grid>
+                      <scrollpane id="641c2">
+                        <constraints>
+                          <tabbedpane title="Hex"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="6d877" class="javax.swing.JEditorPane" binding="editorResponseHex">
+                            <constraints/>
+                            <properties>
+                              <font name="Courier"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </scrollpane>
                     </children>
                   </tabbedpane>
                 </children>

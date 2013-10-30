@@ -9,6 +9,7 @@ import org.jboss.netty.buffer.ChannelBuffers;
  */
 public class Message {
 
+	public static final int BYTES_PER_LINE = 16;
 	private String protocol;
 
 	public enum MessageType {
@@ -66,5 +67,24 @@ public class Message {
 
 	public String textOutput() {
 		return channelBuffer.toString("utf-8");
+	}
+
+	public String hexOutput() {
+		StringBuilder accum = new StringBuilder();
+		int size = channelBuffer.readableBytes();
+		int lineCount = (size / BYTES_PER_LINE) + 1;
+		for (int i = 0; i < lineCount; i++) {
+			int length = size - i * BYTES_PER_LINE;
+			if (length > BYTES_PER_LINE) {
+				length = BYTES_PER_LINE;
+			}
+			accum.append(StringUtils.leftPad(Integer.toHexString(0xff & i), 4, "0").toUpperCase() + " ");
+			for (int j = 0; j < length; j++) {
+				byte b = channelBuffer.readByte();
+				accum.append(StringUtils.leftPad(Integer.toHexString(0xff & b), 2, "0").toUpperCase() + " ");
+			}
+			accum.append("\n");
+		}
+		return accum.toString();
 	}
 }
