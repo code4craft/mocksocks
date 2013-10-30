@@ -53,7 +53,7 @@ public class RedirectRulesDialog extends JDialog {
                     dispose();
 				} catch (Exception ex) {
                     ex.printStackTrace();
-                    JOptionPane.showConfirmDialog(contentPane, ex);
+                    JOptionPane.showMessageDialog(contentPane, ex);
 				}
 			}
 		});

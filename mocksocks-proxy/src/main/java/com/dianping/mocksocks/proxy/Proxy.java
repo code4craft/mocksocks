@@ -10,4 +10,6 @@ public interface Proxy {
     public void stop();
 
     public void loadCache(String cacheFile);
+
+    public boolean isRunning();
 }

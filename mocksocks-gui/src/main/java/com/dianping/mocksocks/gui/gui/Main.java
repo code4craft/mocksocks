@@ -27,10 +27,10 @@ public class Main {
 	private JButton filterButton;
 	private JTabbedPane tabbedPane1;
 	private JList listMessage;
-    private JToolBar toolBar;
-    private Menu menu;
+	private JToolBar toolBar;
+	private Menu menu;
 	private RedirectRulesDialog redirectRulesDialog;
-    private MessageDetailDialog messageDetailDialog;
+	private MessageDetailDialog messageDetailDialog;
 
 	private ConnectionStatusListModel listModel;
 	final SocksProxy socksProxy = new SocksProxy();
@@ -38,24 +38,28 @@ public class Main {
 	public Main() {
 		listModel = new ConnectionStatusListModel(REFRESH_TIME);
 		listConnection.setModel(listModel);
-        socksProxy.start();
 		startButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-                Configs.getInstance().setRecord(true);
-                startButton.setVisible(false);
-                stopButton.setVisible(true);
-                stopButton.grabFocus();
+				if (!socksProxy.isRunning()) {
+					if (!startProxy()) {
+						return;
+					}
+				}
+				Configs.getInstance().setRecord(true);
+				startButton.setVisible(false);
+				stopButton.setVisible(true);
+				stopButton.grabFocus();
 			}
 		});
 		stopButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-                Configs.getInstance().setRecord(false);
-                stopButton.setVisible(false);
-                startButton.setVisible(true);
-                startButton.grabFocus();
-            }
+				Configs.getInstance().setRecord(false);
+				stopButton.setVisible(false);
+				startButton.setVisible(true);
+				startButton.grabFocus();
+			}
 		});
 		clearButton.addActionListener(new ActionListener() {
 			@Override
@@ -92,35 +96,50 @@ public class Main {
 					ConnectionStatus connectionStatus = listModel.getConnectionStatus(listConnection.getSelectedIndex());
 					MessageListModel defaultListModel = new MessageListModel(connectionStatus);
 					listMessage.setModel(defaultListModel);
-                    tabbedPane1.setSelectedIndex(1);
-                }
+					tabbedPane1.setSelectedIndex(1);
+				}
 			}
 		});
-        listMessage.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() > 1) {
-                    Exchange exchange = (Exchange) listMessage.getSelectedValue();
-                    getMessageDetailDialog().setExchange(exchange);
-                    getMessageDetailDialog().setVisible(true);
-                }
-            }
-        });
+		listMessage.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() > 1) {
+					Exchange exchange = (Exchange) listMessage.getSelectedValue();
+					getMessageDetailDialog().setExchange(exchange);
+					getMessageDetailDialog().setVisible(true);
+				}
+			}
+		});
+
+		startProxy();
+	}
+
+	private boolean startProxy() {
+		try {
+			socksProxy.start();
+			return true;
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(panel, e);
+			startButton.setVisible(true);
+			stopButton.setVisible(false);
+			return false;
+		}
 	}
 
 	public RedirectRulesDialog getRedirectRulesDialog() {
 		if (redirectRulesDialog == null) {
 			redirectRulesDialog = new RedirectRulesDialog();
 			redirectRulesDialog.pack();
-            redirectRulesDialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+			redirectRulesDialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		}
 		return redirectRulesDialog;
 	}
+
 	public MessageDetailDialog getMessageDetailDialog() {
 		if (messageDetailDialog == null) {
-            messageDetailDialog = new MessageDetailDialog();
-            messageDetailDialog.pack();
-            messageDetailDialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+			messageDetailDialog = new MessageDetailDialog();
+			messageDetailDialog.pack();
+			messageDetailDialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		}
 		return messageDetailDialog;
 	}

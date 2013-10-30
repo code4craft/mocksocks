@@ -43,12 +43,12 @@ public class SocksProxy implements Proxy {
 	@Override
 	public void start() {
 		if (running.compareAndSet(false, true)) {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					SocksProxy.this.run();
-				}
-			}).start();
+			try {
+				run();
+			} catch (RuntimeException e) {
+				running.compareAndSet(true, false);
+				throw e;
+			}
 		}
 	}
 
@@ -62,5 +62,10 @@ public class SocksProxy implements Proxy {
 	@Override
 	public void loadCache(String cacheFile) {
 
+	}
+
+	@Override
+	public boolean isRunning() {
+		return running.get();
 	}
 }

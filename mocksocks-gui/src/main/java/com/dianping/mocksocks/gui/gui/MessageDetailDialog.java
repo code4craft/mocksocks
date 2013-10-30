@@ -14,6 +14,9 @@ public class MessageDetailDialog extends JDialog {
     private JTabbedPane tabbedPane1;
     private JEditorPane editorRequest;
     private JEditorPane editorResponse;
+    private JTabbedPane requestTab;
+    private JEditorPane editorRequestHex;
+    private JTabbedPane responseTab;
     private Exchange exchange;
 
     public MessageDetailDialog() {
