@@ -17,8 +17,8 @@ public class MessageDetailDialog extends JDialog {
 	private JTabbedPane requestTab;
 	private JEditorPane editorRequestHex;
 	private JTabbedPane responseTab;
-    private JEditorPane editorResponseHex;
-    private Exchange exchange;
+	private JEditorPane editorResponseHex;
+	private Exchange exchange;
 
 	public MessageDetailDialog() {
 		setContentPane(contentPane);
@@ -44,15 +44,20 @@ public class MessageDetailDialog extends JDialog {
 
 	public void setExchange(Exchange exchange) {
 		this.exchange = exchange;
-		editorRequest.setText(exchange.getRequest().textOutput());
-        editorRequestHex.setText(exchange.getRequest().hexOutput());
+		if (exchange.getRequest() != null) {
+			editorRequest.setText(exchange.getRequest().textOutput());
+			editorRequestHex.setText(exchange.getRequest().hexOutput());
+		} else {
+			editorRequest.setText("");
+			editorRequestHex.setText("");
+		}
 		if (exchange.getResponse() != null) {
 			editorResponse.setText(exchange.getResponse().textOutput());
-            editorResponseHex.setText(exchange.getResponse().hexOutput());
+			editorResponseHex.setText(exchange.getResponse().hexOutput());
 		} else {
-            editorResponse.setText("");
-            editorResponseHex.setText("");
-        }
+			editorResponse.setText("");
+			editorResponseHex.setText("");
+		}
 	}
 
 	private void onCancel() {

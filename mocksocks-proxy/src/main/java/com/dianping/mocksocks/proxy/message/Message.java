@@ -4,6 +4,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+
 /**
  * @author yihua.huang@dianping.com
  */
@@ -11,6 +14,7 @@ public class Message {
 
 	public static final int BYTES_PER_LINE = 16;
 	private String protocol;
+	private Charset charset = Charset.defaultCharset();
 
 	public enum MessageType {
 		Request, Response;
@@ -69,11 +73,21 @@ public class Message {
 		return channelBuffer.toString("utf-8");
 	}
 
+	public Charset getCharset() {
+		return charset;
+	}
+
+	public void setCharset(Charset charset) {
+		this.charset = charset;
+	}
+
 	public String hexOutput() {
 		StringBuilder accum = new StringBuilder();
 		int size = channelBuffer.readableBytes();
 		int lineCount = (size / BYTES_PER_LINE) + 1;
+		ByteBuffer byteBuffer = ByteBuffer.allocate(BYTES_PER_LINE);
 		for (int i = 0; i < lineCount; i++) {
+			byteBuffer.clear();
 			int length = size - i * BYTES_PER_LINE;
 			if (length > BYTES_PER_LINE) {
 				length = BYTES_PER_LINE;
@@ -81,8 +95,16 @@ public class Message {
 			accum.append(StringUtils.leftPad(Integer.toHexString(0xff & i), 4, "0").toUpperCase() + " ");
 			for (int j = 0; j < length; j++) {
 				byte b = channelBuffer.readByte();
+				byteBuffer.put(b);
 				accum.append(StringUtils.leftPad(Integer.toHexString(0xff & b), 2, "0").toUpperCase() + " ");
 			}
+			if (length < BYTES_PER_LINE) {
+				for (int j = 0; j < BYTES_PER_LINE - length; j++) {
+					accum.append("   ");
+				}
+			}
+			byteBuffer.flip();
+			accum.append(charset.decode(byteBuffer));
 			accum.append("\n");
 		}
 		return accum.toString();
