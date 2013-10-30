@@ -127,6 +127,7 @@
                           <component id="da24e" class="javax.swing.JEditorPane" binding="editorRequestHex">
                             <constraints/>
                             <properties>
+                              <editable value="false"/>
                               <font name="Courier"/>
                             </properties>
                           </component>
@@ -192,6 +193,7 @@
                           <component id="6d877" class="javax.swing.JEditorPane" binding="editorResponseHex">
                             <constraints/>
                             <properties>
+                              <editable value="false"/>
                               <font name="Courier"/>
                             </properties>
                           </component>

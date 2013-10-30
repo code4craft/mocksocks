@@ -92,7 +92,7 @@ public class Main {
 		listConnection.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() > 1) {
+				if (e.getClickCount() > 1 && e.getButton() == MouseEvent.BUTTON1) {
 					ConnectionStatus connectionStatus = listModel.getConnectionStatus(listConnection.getSelectedIndex());
 					MessageListModel defaultListModel = new MessageListModel(connectionStatus);
 					listMessage.setModel(defaultListModel);
@@ -103,7 +103,7 @@ public class Main {
 		listMessage.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() > 1) {
+				if (e.getClickCount() > 1 && e.getButton() == MouseEvent.BUTTON1) {
 					Exchange exchange = (Exchange) listMessage.getSelectedValue();
 					getMessageDetailDialog().setExchange(exchange);
 					getMessageDetailDialog().setVisible(true);
