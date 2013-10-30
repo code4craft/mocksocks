@@ -26,7 +26,8 @@ public class Main {
 	private JButton filterButton;
 	private JTabbedPane tabbedPane1;
 	private JList listMessage;
-	private Menu menu;
+    private JToolBar toolBar;
+    private Menu menu;
 	private RedirectRulesDialog redirectRulesDialog;
     private MessageDetailDialog messageDetailDialog;
 
