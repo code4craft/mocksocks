@@ -95,6 +95,7 @@ public class ConnectionStatus {
 		this.bytesSend += channelBuffer.readableBytes();
 		if (current == null) {
 			current = new Exchange();
+            messages.add(current);
 			current.setRequest(new Message(channelBuffer, Message.MessageType.Request, protocol));
 		} else if (current.getRequest() == null) {
 			current.setRequest(new Message(channelBuffer, Message.MessageType.Request, protocol));
@@ -141,9 +142,6 @@ public class ConnectionStatus {
 
 	public ConnectionStatus close() {
 		this.status = "closed";
-		if (current != null) {
-			messages.add(current);
-		}
 		endTime = System.currentTimeMillis();
 		return this;
 	}

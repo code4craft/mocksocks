@@ -60,14 +60,11 @@ public class Message {
 
 	@Override
 	public String toString() {
-		return "Message{" + "protocol='" + protocol + '\'' + ", channelBuffer=" + StringUtils.substringBefore(outputBuffer(),"\n") + ", type=" + type
-				+ '}';
+		return "Message{" + "protocol='" + protocol + '\'' + ", channelBuffer="
+				+ StringUtils.substringBefore(textOutput(), "\n") + ", type=" + type + '}';
 	}
 
-	public String outputBuffer() {
-		if ("http".equalsIgnoreCase(protocol)) {
-            return channelBuffer.toString("utf-8");
-		}
-		return "";
+	public String textOutput() {
+		return channelBuffer.toString("utf-8");
 	}
 }
