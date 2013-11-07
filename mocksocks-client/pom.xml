@@ -13,19 +13,6 @@
     <artifactId>mocksocks-client</artifactId>
     <version>0.0.2-SNAPSHOT</version>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.ow2.asm</groupId>
-            <artifactId>asm</artifactId>
-            <version>4.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.18.1-GA</version>
-        </dependency>
-    </dependencies>
-
     <build>
         <plugins>
             <plugin>

@@ -13,6 +13,10 @@ MockSocks
 * ### 多种协议扩展
 
 	MockSocks基于socks协议，可以拦截所有基于TCP的应用协议，包括HTTP、FTP、SMTP等公用协议，也支持mysql、mongo、memcached等私有协议，以及一些自定义的RPC协议和序列化方式。希望在程序内部以可扩展的方式，因此多种编码/解码器，从而达到对协议的支持。
+	
+## 安装
+
+
 
 ## 开发计划
 
@@ -28,7 +32,7 @@ MockSocks分为几个部分：
 
 	提供Socks代理服务，保证一定性能的情况下，提供良好的扩展接口。此部分基于Netty开发，目前已开发完成，代码在`mocksocks-proxy`模块内。
 	
-* ### 用户界面及功能(30%)
+* ### 用户界面及功能(70%)
 
 	提供界面，让用户可以更方便的监控及修改。这部分使用swing实现，目前完成了连接显示、过滤、重定向模块。引入了h2做数据存储。完成度:40%?
 	
@@ -60,7 +64,3 @@ MockSocks分为几个部分：
 
   [1]: http://static.oschina.net/uploads/space/2013/1025/202527_iLkr_190591.png
   [2]: http://static.oschina.net/uploads/space/2013/1026/224012_KNGE_190591.png
-  
-  
-  
-  
