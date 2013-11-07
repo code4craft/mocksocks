@@ -38,50 +38,8 @@ public class Main {
 	public Main() {
 		listModel = new ConnectionStatusListModel(REFRESH_TIME);
 		listConnection.setModel(listModel);
-		startButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (!socksProxy.isRunning()) {
-					if (!startProxy()) {
-						return;
-					}
-				}
-				Configs.getInstance().setRecord(true);
-				startButton.setVisible(false);
-				stopButton.setVisible(true);
-				stopButton.grabFocus();
-			}
-		});
-		stopButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Configs.getInstance().setRecord(false);
-				stopButton.setVisible(false);
-				startButton.setVisible(true);
-				startButton.grabFocus();
-			}
-		});
-		clearButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				listModel.clear();
-				ConnectionMonitor.getInstance().clear();
-			}
-		});
-		filterButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				fireFilter();
-			}
-		});
-		textField1.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-				if (e.getKeyChar() == '\n') {
-					fireFilter();
-				}
-			}
-		});
+        initToolbar();
+        initFilter();
 		menu = new Menu();
 		menu.getRedirectRules().addActionListener(new ActionListener() {
 			@Override
@@ -114,7 +72,57 @@ public class Main {
 		startProxy();
 	}
 
-	private boolean startProxy() {
+    private void initFilter() {
+        filterButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fireFilter();
+            }
+        });
+        textField1.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (e.getKeyChar() == '\n') {
+                    fireFilter();
+                }
+            }
+        });
+    }
+
+    private void initToolbar() {
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!socksProxy.isRunning()) {
+                    if (!startProxy()) {
+                        return;
+                    }
+                }
+                Configs.getInstance().setRecord(true);
+                startButton.setVisible(false);
+                stopButton.setVisible(true);
+                stopButton.grabFocus();
+            }
+        });
+        stopButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Configs.getInstance().setRecord(false);
+                stopButton.setVisible(false);
+                startButton.setVisible(true);
+                startButton.grabFocus();
+            }
+        });
+        clearButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                listModel.clear();
+                ConnectionMonitor.getInstance().clear();
+            }
+        });
+    }
+
+    private boolean startProxy() {
 		try {
 			socksProxy.start();
 			return true;

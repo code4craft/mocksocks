@@ -1,6 +1,7 @@
 package com.dianping.mocksocks.proxy.dao;
 
 import org.apache.commons.dbutils.QueryRunner;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.SQLException;
@@ -10,6 +11,7 @@ import java.sql.SQLException;
  */
 public class BaseDapTest {
 
+    @Ignore
     @Test
     public void testDatasource() throws SQLException {
         BaseDao baseDao = new BaseDao();
