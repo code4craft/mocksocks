@@ -16,7 +16,31 @@ MockSocks
 	
 ## 安装
 
+	curl http://192.168.7.74:/data/devtools/install.sh | sh
+	
+默认安装到`/usr/local/mocksocks`目录
+	
+## 使用：
 
+### 启动代理：
+
+	java -jar /usr/local/mocksocks/mocksocks.jar
+
+### Java程序客户端：
+
+在VM参数中添加
+	
+	-javaagent:/usr/local/mocksocks/client.jar -DmockFile=/usr/local/mocksocks/client.jar
+
+并启动。	
+	
+### 查看
+
+在界面上即可看到所有活跃连接，双击连接可查看内容！
+
+![gui][3]
+
+目前只能查看纯文本，hessian解析会近日推出！
 
 ## 开发计划
 
@@ -61,6 +85,8 @@ MockSocks分为几个部分：
 
 	MockSocks的初始动机是为测试时提供一个稳定的环境。可以在测试时，对请求内容进行抓包并持久化到本地，以后在回归测试时只需使用本地文件，大大增加测试的稳定性和减少对环境的依赖。这部分涉及到JUnit以及maven相关功能。目前还未开始开发。
 
+# 诚征会设计的童鞋加入！
 
   [1]: http://static.oschina.net/uploads/space/2013/1025/202527_iLkr_190591.png
   [2]: http://static.oschina.net/uploads/space/2013/1026/224012_KNGE_190591.png
+  [3]: http://static.oschina.net/uploads/space/2013/1107/182714_ftTa_190591.png
