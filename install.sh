@@ -1,6 +1,6 @@
 #!/bin/sh
 FILE="mocksocks.tar.gz"
-URL="http://192.168.7.74/devtools/${FILE}"
+URL="http://code4craft.qiniudn.com/${FILE}"
 LPATH="/usr/local/mocksocks"
 mkdir -p ${LPATH};
 curl ${URL} > ${LPATH}/${FILE}
