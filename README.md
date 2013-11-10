@@ -16,7 +16,7 @@ MockSocks
 	
 ## 安装
 
-	curl http://192.168.7.74/devtools/install.sh | sh
+	curl http://code4craft.qiniudn.com/install.sh | [sudo] sh
 	
 默认安装到`/usr/local/mocksocks`目录
 	
