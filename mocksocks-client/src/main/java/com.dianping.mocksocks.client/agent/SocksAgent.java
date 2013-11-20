@@ -17,7 +17,8 @@ public class SocksAgent {
 			System.setProperty("socksProxyPort", "13721");
 		}
 		String mockFile = System.getProperty("mockFile");
-		if (mockFile != null) {
+        System.out.println("get mock file "+mockFile);
+        if (mockFile != null) {
 			inst.appendToBootstrapClassLoaderSearch(new JarFile(mockFile));
 		}
 		System.setProperty("java.nio.channels.spi.SelectorProvider",

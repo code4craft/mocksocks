@@ -24,6 +24,7 @@
         <module>mocksocks-client</module>
         <module>mocksocks-sample</module>
         <module>mocksocks-web</module>
+        <module>mocksocks-maven</module>
     </modules>
 
     <build>
