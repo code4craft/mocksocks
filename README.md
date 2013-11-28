@@ -38,12 +38,18 @@ MockSocks
 
 在界面上即可看到所有活跃连接，双击连接可查看内容！
 
-# 诚征会设计的童鞋加入！
-
 ![gui][3]
 
-目前只能查看纯文本，hessian解析会近日推出！
+### 新UI:
+
+![gui][4]
+
+### 进展
+
+![schedule][5]
 
   [1]: http://static.oschina.net/uploads/space/2013/1025/202527_iLkr_190591.png
   [2]: http://static.oschina.net/uploads/space/2013/1026/224012_KNGE_190591.png
   [3]: http://static.oschina.net/uploads/space/2013/1107/182714_ftTa_190591.png
+  [4]: http://static.oschina.net/uploads/space/2013/1117/212244_eFUQ_190591.png
+  [5]: http://static.oschina.net/uploads/space/2013/1128/165612_IeBV_190591.jpeg
