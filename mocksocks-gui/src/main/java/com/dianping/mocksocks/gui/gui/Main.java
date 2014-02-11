@@ -2,12 +2,12 @@ package com.dianping.mocksocks.gui.gui;
 
 import com.dianping.mocksocks.gui.data.ConnectionStatusListModel;
 import com.dianping.mocksocks.gui.data.MessageListModel;
-import com.dianping.mocksocks.proxy.config.Configs;
-import com.dianping.mocksocks.proxy.message.Exchange;
-import com.dianping.mocksocks.proxy.monitor.ConnectionMonitor;
-import com.dianping.mocksocks.proxy.monitor.ConnectionStatus;
-import com.dianping.mocksocks.proxy.rules.filter.ConnectionStatusHostFilter;
-import com.dianping.mocksocks.proxy.socks.SocksProxy;
+import com.dianping.mocksocks.transport.Transmit;
+import com.dianping.mocksocks.transport.Connection;
+import com.dianping.mocksocks.transport.monitor.config.Configs;
+import com.dianping.mocksocks.transport.monitor.ConnectionMonitor;
+import com.dianping.mocksocks.transport.rules.filter.ConnectionStatusHostFilter;
+import com.dianping.mocksocks.transport.socks.SocksProxy;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -51,8 +51,8 @@ public class Main {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() > 1 && e.getButton() == MouseEvent.BUTTON1) {
-					ConnectionStatus connectionStatus = listModel.getConnectionStatus(listConnection.getSelectedIndex());
-					MessageListModel defaultListModel = new MessageListModel(connectionStatus);
+					Connection connection = listModel.getConnectionStatus(listConnection.getSelectedIndex());
+					MessageListModel defaultListModel = new MessageListModel(connection);
 					listMessage.setModel(defaultListModel);
 					tabbedPane1.setSelectedIndex(1);
 				}
@@ -62,8 +62,8 @@ public class Main {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() > 1 && e.getButton() == MouseEvent.BUTTON1) {
-					Exchange exchange = (Exchange) listMessage.getSelectedValue();
-					getMessageDetailDialog().setExchange(exchange);
+					Transmit transmit = (Transmit) listMessage.getSelectedValue();
+					getMessageDetailDialog().setTransmit(transmit);
 					getMessageDetailDialog().setVisible(true);
 				}
 			}

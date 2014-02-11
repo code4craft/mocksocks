@@ -31,7 +31,7 @@
         </dependency>
         <dependency>
             <groupId>com.dianping</groupId>
-            <artifactId>mocksocks-proxy</artifactId>
+            <artifactId>mocksocks-transport</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

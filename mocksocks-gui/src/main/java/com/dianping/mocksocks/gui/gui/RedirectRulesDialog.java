@@ -1,7 +1,7 @@
 package com.dianping.mocksocks.gui.gui;
 
-import com.dianping.mocksocks.proxy.dao.RulesDao;
-import com.dianping.mocksocks.proxy.rules.RulesContainer;
+import com.dianping.mocksocks.transport.monitor.config.RulesDao;
+import com.dianping.mocksocks.transport.rules.RulesContainer;
 
 import javax.swing.*;
 import java.awt.event.*;

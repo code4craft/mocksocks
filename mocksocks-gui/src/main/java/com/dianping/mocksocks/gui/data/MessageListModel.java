@@ -1,6 +1,6 @@
 package com.dianping.mocksocks.gui.data;
 
-import com.dianping.mocksocks.proxy.monitor.ConnectionStatus;
+import com.dianping.mocksocks.transport.Connection;
 
 import javax.swing.*;
 
@@ -9,19 +9,19 @@ import javax.swing.*;
  */
 public class MessageListModel extends AbstractListModel {
 
-    private ConnectionStatus connectionStatus;
+    private Connection connection;
 
-    public MessageListModel(ConnectionStatus connectionStatus) {
-        this.connectionStatus = connectionStatus;
+    public MessageListModel(Connection connection) {
+        this.connection = connection;
     }
 
     @Override
     public int getSize() {
-        return connectionStatus.getMessages().size();
+        return connection.getMessages().size();
     }
 
     @Override
     public Object getElementAt(int index) {
-        return connectionStatus.getMessages().get(index);
+        return connection.getMessages().get(index);
     }
 }

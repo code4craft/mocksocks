@@ -1,8 +1,8 @@
 package com.dianping.mocksocks.gui.data;
 
-import com.dianping.mocksocks.proxy.monitor.ConnectionMonitor;
-import com.dianping.mocksocks.proxy.monitor.ConnectionStatus;
-import com.dianping.mocksocks.proxy.rules.filter.Filter;
+import com.dianping.mocksocks.transport.Connection;
+import com.dianping.mocksocks.transport.monitor.ConnectionMonitor;
+import com.dianping.mocksocks.transport.rules.filter.Filter;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -15,9 +15,9 @@ public class ConnectionStatusListModel extends AbstractListModel {
 
 	private List<String> display = new ArrayList<String>();
 
-    private List<ConnectionStatus> connectionStatuses = new ArrayList<ConnectionStatus>();
+    private List<Connection> connectionStatuses = new ArrayList<Connection>();
 
-	private List<Filter<ConnectionStatus>> filters = new ArrayList<Filter<ConnectionStatus>>();
+	private List<Filter<Connection>> filters = new ArrayList<Filter<Connection>>();
 
 	public ConnectionStatusListModel(final int refreshTime) {
 		new Thread(new Runnable() {
@@ -39,16 +39,16 @@ public class ConnectionStatusListModel extends AbstractListModel {
 	public synchronized void update() {
 		display.clear();
         connectionStatuses.clear();
-		connectionLoop: for (ConnectionStatus connectionStatus : ConnectionMonitor.getInstance().status()) {
+		connectionLoop: for (Connection connection : ConnectionMonitor.getInstance().status()) {
 			if (filters.size() > 0) {
-				for (Filter<ConnectionStatus> filter : filters) {
-					if (!filter.preserve(connectionStatus)) {
+				for (Filter<Connection> filter : filters) {
+					if (!filter.preserve(connection)) {
 						continue connectionLoop;
 					}
 				}
 			}
-            connectionStatuses.add(connectionStatus);
-			display.add(connectionStatus.toString());
+            connectionStatuses.add(connection);
+			display.add(connection.toString());
 		}
 		fireContentsChanged(this, 0, display.size());
 	}
@@ -58,11 +58,11 @@ public class ConnectionStatusListModel extends AbstractListModel {
 		return display.size();
 	}
 
-	public void setFilters(List<Filter<ConnectionStatus>> filters) {
+	public void setFilters(List<Filter<Connection>> filters) {
 		this.filters = filters;
 	}
 
-	public void setFilter(Filter<ConnectionStatus> filter) {
+	public void setFilter(Filter<Connection> filter) {
 		this.filters.clear();
 		filters.add(filter);
 	}
@@ -72,7 +72,7 @@ public class ConnectionStatusListModel extends AbstractListModel {
 		return display.get(index);
 	}
 
-    public ConnectionStatus getConnectionStatus(int index) {
+    public Connection getConnectionStatus(int index) {
         return connectionStatuses.get(index);
     }
 

@@ -1,6 +1,6 @@
 package com.dianping.mocksocks.gui.gui;
 
-import com.dianping.mocksocks.proxy.message.Exchange;
+import com.dianping.mocksocks.transport.Transmit;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -18,7 +18,7 @@ public class MessageDetailDialog extends JDialog {
 	private JEditorPane editorRequestHex;
 	private JTabbedPane responseTab;
 	private JEditorPane editorResponseHex;
-	private Exchange exchange;
+	private Transmit transmit;
 
 	public MessageDetailDialog() {
 		setContentPane(contentPane);
@@ -42,18 +42,18 @@ public class MessageDetailDialog extends JDialog {
 		}, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 	}
 
-	public void setExchange(Exchange exchange) {
-		this.exchange = exchange;
-		if (exchange.getRequest() != null) {
-			editorRequest.setText(exchange.getRequest().textOutput());
-			editorRequestHex.setText(exchange.getRequest().hexOutput());
+	public void setTransmit(Transmit transmit) {
+		this.transmit = transmit;
+		if (transmit.getRequest() != null) {
+			editorRequest.setText(transmit.getRequest().textOutput());
+			editorRequestHex.setText(transmit.getRequest().hexOutput());
 		} else {
 			editorRequest.setText("");
 			editorRequestHex.setText("");
 		}
-		if (exchange.getResponse() != null) {
-			editorResponse.setText(exchange.getResponse().textOutput());
-			editorResponseHex.setText(exchange.getResponse().hexOutput());
+		if (transmit.getResponse() != null) {
+			editorResponse.setText(transmit.getResponse().textOutput());
+			editorResponseHex.setText(transmit.getResponse().hexOutput());
 		} else {
 			editorResponse.setText("");
 			editorResponseHex.setText("");

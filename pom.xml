@@ -18,13 +18,12 @@
         </developer>
     </developers>
     <modules>
-        <module>mocksocks-proxy</module>
+        <module>mocksocks-transport</module>
         <module>mocksocks-junit</module>
         <module>mocksocks-gui</module>
         <module>mocksocks-client</module>
         <module>mocksocks-sample</module>
         <module>mocksocks-web</module>
-        <module>mocksocks-maven</module>
     </modules>
 
     <build>
