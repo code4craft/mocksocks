@@ -1,4 +1,4 @@
-package com.dianping.mocksocks.transport.socks;
+package com.dianping.mocksocks.transport.proxy;
 
 import com.dianping.mocksocks.transport.Proxy;
 import org.jboss.netty.bootstrap.ServerBootstrap;
@@ -20,6 +20,8 @@ public class SocksProxy implements Proxy {
 
 	private AtomicBoolean running = new AtomicBoolean(false);
 
+    private ProxyConfig proxyConfig;
+
 	public void run() {
 
 		// Configure the bootstrap.
@@ -30,7 +32,7 @@ public class SocksProxy implements Proxy {
 		// Set up the event pipeline factory.
 		ClientSocketChannelFactory cf = new NioClientSocketChannelFactory(executor, executorWorker);
 
-		sb.setPipelineFactory(new SocksProxyPipelineFactory(cf));
+		sb.setPipelineFactory(new SocksProxyPipelineFactory(cf,proxyConfig));
 
 		// Start up the server.
 		sb.bind(new InetSocketAddress(13721));

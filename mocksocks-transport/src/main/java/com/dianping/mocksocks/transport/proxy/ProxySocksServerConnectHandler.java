@@ -1,4 +1,4 @@
-package com.dianping.mocksocks.transport.socks;
+package com.dianping.mocksocks.transport.proxy;
 
 import com.dianping.mocksocks.transport.Connection;
 import com.dianping.mocksocks.transport.monitor.config.Configs;
@@ -17,9 +17,9 @@ import java.net.InetSocketAddress;
 /**
  * @author yihua.huang@dianping.com
  */
-public class SocksServerConnectHandler extends SimpleChannelUpstreamHandler {
+public class ProxySocksServerConnectHandler extends SimpleChannelUpstreamHandler {
 
-	private static final String name = "SOCKS_SERVER_CONNECT_HANDLER";
+	private static final String name = "PROXY_SOCKS_SERVER_CONNECT_HANDLER";
 
 	public static String getName() {
 		return name;
@@ -29,7 +29,7 @@ public class SocksServerConnectHandler extends SimpleChannelUpstreamHandler {
 
 	private volatile Channel outboundChannel;
 
-	public SocksServerConnectHandler(ClientSocketChannelFactory cf) {
+	public ProxySocksServerConnectHandler(ClientSocketChannelFactory cf) {
 		this.cf = cf;
 	}
 
@@ -67,8 +67,6 @@ public class SocksServerConnectHandler extends SimpleChannelUpstreamHandler {
 		if (Configs.getInstance().isRecord()) {
 			ConnectionMonitor.getInstance().putStatus(outboundChannel, connection);
 		}
-		// System.out.println("connect to " + socksCmdRequest.getHost() + " : "
-		// + socksCmdRequest.getPort());
 
 		f.addListener(new ChannelFutureListener() {
 			public void operationComplete(ChannelFuture future) throws Exception {
@@ -79,14 +77,10 @@ public class SocksServerConnectHandler extends SimpleChannelUpstreamHandler {
 					if (decoder != null) {
 						outboundChannel.getPipeline().addLast("decoder" + decoder.getClass().getName(), decoder);
 					}
-					// outboundChannel.getPipeline().addLast("output", new
-					// OutPutHandler());
-
 					// client数据转发到外部server
 					inboundChannel.getPipeline().addLast(
 							"inboundChannel",
-							new OutboundHandler(outboundChannel, socksCmdRequest.getHost() + " : "
-									+ socksCmdRequest.getPort() + ">>>"));
+							new OutboundHandler(outboundChannel, connection));
 					inboundChannel.write(new SocksCmdResponse(SocksMessage.CmdStatus.SUCCESS, socksCmdRequest
 							.getAddressType()));
 					inboundChannel.setReadable(true);

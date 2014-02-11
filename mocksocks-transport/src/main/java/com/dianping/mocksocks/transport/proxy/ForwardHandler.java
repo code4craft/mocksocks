@@ -1,4 +1,4 @@
-package com.dianping.mocksocks.transport.socks;
+package com.dianping.mocksocks.transport.proxy;
 
 import com.dianping.mocksocks.transport.Connection;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -14,7 +14,7 @@ public class ForwardHandler extends OutboundHandler implements ChannelDownstream
 	private final Connection connection;
 
 	public ForwardHandler(Channel inboundChannel, String name, Connection connection) {
-		super(inboundChannel, name);
+		super(inboundChannel, connection);
 		this.connection = connection;
 	}
 

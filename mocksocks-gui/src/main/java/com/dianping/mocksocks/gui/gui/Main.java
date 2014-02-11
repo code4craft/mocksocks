@@ -7,7 +7,7 @@ import com.dianping.mocksocks.transport.Connection;
 import com.dianping.mocksocks.transport.monitor.config.Configs;
 import com.dianping.mocksocks.transport.monitor.ConnectionMonitor;
 import com.dianping.mocksocks.transport.rules.filter.ConnectionStatusHostFilter;
-import com.dianping.mocksocks.transport.socks.SocksProxy;
+import com.dianping.mocksocks.transport.proxy.SocksProxy;
 
 import javax.swing.*;
 import java.awt.event.*;

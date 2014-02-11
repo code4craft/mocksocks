@@ -1,7 +1,7 @@
 package com.dianping.mocksocks.web;
 
 import com.dianping.mocksocks.transport.monitor.ConnectionMonitor;
-import com.dianping.mocksocks.transport.socks.SocksProxy;
+import com.dianping.mocksocks.transport.proxy.SocksProxy;
 import us.codecraft.express.WebServer;
 import us.codecraft.express.controller.AjaxController;
 import us.codecraft.express.controller.ParamMap;

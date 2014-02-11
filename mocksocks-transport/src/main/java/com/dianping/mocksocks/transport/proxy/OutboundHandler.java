@@ -1,5 +1,6 @@
-package com.dianping.mocksocks.transport.socks;
+package com.dianping.mocksocks.transport.proxy;
 
+import com.dianping.mocksocks.transport.Connection;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.*;
@@ -13,9 +14,11 @@ public class OutboundHandler extends SimpleChannelUpstreamHandler {
 
 	private String name;
 
-	OutboundHandler(Channel inboundChannel, String name) {
+	private Connection connection;
+
+	OutboundHandler(Channel inboundChannel, Connection connection) {
 		this.inboundChannel = inboundChannel;
-		this.name = name;
+		this.connection = connection;
 	}
 
 	@Override
@@ -33,7 +36,7 @@ public class OutboundHandler extends SimpleChannelUpstreamHandler {
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		closeOnFlush(e.getChannel());
-        inboundChannel.close();
+		inboundChannel.close();
 	}
 
 	/**
@@ -45,7 +48,7 @@ public class OutboundHandler extends SimpleChannelUpstreamHandler {
 		}
 	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 }
