@@ -3,7 +3,6 @@ package com.dianping.mocksocks.transport.proxy;
 import com.dianping.mocksocks.transport.Connection;
 import com.dianping.mocksocks.transport.protocals.CodecSelector;
 import org.jboss.netty.channel.*;
-import org.jboss.netty.channel.socket.ClientSocketChannelFactory;
 import org.jboss.netty.handler.codec.socks.SocksCmdRequest;
 import org.jboss.netty.handler.codec.socks.SocksCmdResponse;
 import org.jboss.netty.handler.codec.socks.SocksMessage;
@@ -21,12 +20,7 @@ public class MockSocksServerConnectHandler extends SimpleChannelUpstreamHandler 
 		return name;
 	}
 
-	private final ClientSocketChannelFactory cf;
-
-	private volatile Channel outboundChannel;
-
-	public MockSocksServerConnectHandler(ClientSocketChannelFactory cf) {
-		this.cf = cf;
+	public MockSocksServerConnectHandler() {
 	}
 
 	@Override
@@ -39,12 +33,8 @@ public class MockSocksServerConnectHandler extends SimpleChannelUpstreamHandler 
 
 		// decide protocol by port
 		ChannelUpstreamHandler decoder = CodecSelector.decoder(remoteAddress, null);
-		if (decoder != null) {
-			outboundChannel.getPipeline().addLast("decoder" + decoder.getClass().getName(), decoder);
-		}
 		final Connection connection = new Connection();
 		// client数据转发到外部server
-		inboundChannel.getPipeline().addLast("inboundChannel", new OutboundHandler(outboundChannel, connection));
 		inboundChannel.write(new SocksCmdResponse(SocksMessage.CmdStatus.SUCCESS, socksCmdRequest.getAddressType()));
 		inboundChannel.setReadable(true);
 		decoder = CodecSelector.decoder(remoteAddress, null);

@@ -165,13 +165,21 @@ public class Main {
 		}
 	}
 
+    class ClosingHandler extends WindowAdapter {
+        @Override
+        public void windowClosing(WindowEvent e) {
+            socksProxy.stop();
+        }
+    }
+
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("MockSocks");
 		Main main = new Main();
 		frame.setContentPane(main.panel);
 		frame.setJMenuBar(main.menu);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.pack();
+        frame.addWindowListener(main.new ClosingHandler());
 		frame.setVisible(true);
 	}
 

@@ -24,6 +24,9 @@ public class SocksProxy implements Proxy {
 
 	public void run() {
 
+        proxyConfig = new ProxyConfig();
+        proxyConfig.setMode(ProxyConfig.Mode.Proxy);
+
 		// Configure the bootstrap.
 		Executor executor = Executors.newCachedThreadPool();
 		Executor executorWorker = Executors.newCachedThreadPool();

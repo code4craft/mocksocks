@@ -32,11 +32,12 @@ public final class SocksServerHandler extends SimpleChannelUpstreamHandler {
 
 	private final ClientSocketChannelFactory cf;
 
-	public SocksServerHandler(ClientSocketChannelFactory cf) {
-		this.cf = cf;
-	}
+    public SocksServerHandler( ProxyConfig proxyConfig,ClientSocketChannelFactory cf) {
+        this.proxyConfig = proxyConfig;
+        this.cf = cf;
+    }
 
-	@Override
+    @Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 		SocksRequest socksRequest = (SocksRequest) e.getMessage();
 		switch (socksRequest.getSocksRequestType()) {
@@ -60,7 +61,7 @@ public final class SocksServerHandler extends SimpleChannelUpstreamHandler {
 							new ProxySocksServerConnectHandler(cf));
 				} else {
 					ctx.getPipeline().addLast(ProxySocksServerConnectHandler.getName(),
-							new MockSocksServerConnectHandler(cf));
+							new MockSocksServerConnectHandler());
 				}
 				ctx.getPipeline().remove(this);
 			} else {

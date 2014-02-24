@@ -13,6 +13,7 @@ import org.jboss.netty.handler.codec.socks.SocksCmdResponse;
 import org.jboss.netty.handler.codec.socks.SocksMessage;
 
 import java.net.InetSocketAddress;
+import java.nio.channels.ClosedChannelException;
 
 /**
  * @author yihua.huang@dianping.com
@@ -78,8 +79,7 @@ public class ProxySocksServerConnectHandler extends SimpleChannelUpstreamHandler
 						outboundChannel.getPipeline().addLast("decoder" + decoder.getClass().getName(), decoder);
 					}
 					// client数据转发到外部server
-					inboundChannel.getPipeline().addLast(
-							"inboundChannel",
+					inboundChannel.getPipeline().addLast("inboundChannel",
 							new OutboundHandler(outboundChannel, connection));
 					inboundChannel.write(new SocksCmdResponse(SocksMessage.CmdStatus.SUCCESS, socksCmdRequest
 							.getAddressType()));
@@ -104,7 +104,11 @@ public class ProxySocksServerConnectHandler extends SimpleChannelUpstreamHandler
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-		super.exceptionCaught(ctx, e);
+		if (e.getCause() instanceof ClosedChannelException) {
+			// do nothing
+		} else {
+			super.exceptionCaught(ctx, e);
+		}
 	}
 
 }

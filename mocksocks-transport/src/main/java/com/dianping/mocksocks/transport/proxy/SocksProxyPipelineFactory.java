@@ -25,7 +25,7 @@ public class SocksProxyPipelineFactory implements ChannelPipelineFactory {
 		ChannelPipeline pipeline = Channels.pipeline();
 		pipeline.addLast(SocksInitRequestDecoder.getName(), new SocksInitRequestDecoder());
 		pipeline.addLast(SocksMessageEncoder.getName(), new SocksMessageEncoder());
-		pipeline.addLast(SocksServerHandler.getName(), new SocksServerHandler(cf));
+		pipeline.addLast(SocksServerHandler.getName(), new SocksServerHandler(proxyConfig, cf));
 		return pipeline;
 	}
 }
