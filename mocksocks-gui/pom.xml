@@ -89,7 +89,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.dianping.mocksocks.gui.gui.Main</mainClass>
+                            <mainClass>com.dianping.mocksocks.gui.gui.MocksocksDashboard</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

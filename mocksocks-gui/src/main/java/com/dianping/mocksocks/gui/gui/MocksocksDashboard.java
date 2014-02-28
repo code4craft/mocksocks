@@ -15,7 +15,7 @@ import java.awt.event.*;
 /**
  * @author yihua.huang@dianping.com
  */
-public class Main {
+public class MocksocksDashboard {
 	public static final int REFRESH_TIME = 1000;
 	private JList listConnection;
 	private JPanel panel;
@@ -35,7 +35,7 @@ public class Main {
 	private ConnectionStatusListModel listModel;
 	final SocksProxy socksProxy = new SocksProxy();
 
-	public Main() {
+	public MocksocksDashboard() {
 		listModel = new ConnectionStatusListModel(REFRESH_TIME);
 		listConnection.setModel(listModel);
         initToolbar();
@@ -68,6 +68,11 @@ public class Main {
 				}
 			}
 		});
+        frame.setContentPane(panel);
+        frame.setJMenuBar(menu);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.pack();
+        frame.addWindowListener(new ClosingHandler());
 
 		startProxy();
 	}
@@ -172,15 +177,19 @@ public class Main {
         }
     }
 
+    private JFrame frame = new JFrame("MockSocks");
+
+    public void addClosingHandler(WindowAdapter closingHandler) {
+        frame.addWindowListener(closingHandler);
+    }
+
+    public void show(){
+        frame.setVisible(true);
+    }
+
 	public static void main(String[] args) {
-		JFrame frame = new JFrame("MockSocks");
-		Main main = new Main();
-		frame.setContentPane(main.panel);
-		frame.setJMenuBar(main.menu);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.pack();
-        frame.addWindowListener(main.new ClosingHandler());
-		frame.setVisible(true);
+        MocksocksDashboard mocksocksDashboard = new MocksocksDashboard();
+        mocksocksDashboard.show();
 	}
 
 	private void createUIComponents() {
