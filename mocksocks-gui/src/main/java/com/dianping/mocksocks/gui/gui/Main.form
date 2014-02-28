@@ -151,9 +151,9 @@
               <horizontalAlignment value="0"/>
               <icon value="icon/record-start.png"/>
               <margin top="0" left="5" bottom="0" right="5"/>
-              <maximumSize width="95" height="44"/>
+              <maximumSize width="120" height="44"/>
               <minimumSize width="95" height="44"/>
-              <preferredSize width="95" height="44"/>
+              <preferredSize width="120" height="44"/>
               <text value="Start"/>
               <toolTipText value="Start recording"/>
               <verticalAlignment value="0"/>
@@ -166,9 +166,9 @@
               <font name="Monotype Sorts"/>
               <icon value="icon/record-stop.png"/>
               <margin top="0" left="5" bottom="0" right="5"/>
-              <maximumSize width="95" height="44"/>
+              <maximumSize width="120" height="44"/>
               <minimumSize width="95" height="44"/>
-              <preferredSize width="95" height="44"/>
+              <preferredSize width="120" height="44"/>
               <text value="Stop"/>
               <toolTipText value="Stop recording"/>
               <visible value="true"/>
@@ -180,9 +180,9 @@
               <font name="Monotype Sorts"/>
               <icon value="icon/status-clear.png"/>
               <margin top="0" left="5" bottom="0" right="5"/>
-              <maximumSize width="95" height="44"/>
+              <maximumSize width="120" height="44"/>
               <minimumSize width="95" height="44"/>
-              <preferredSize width="95" height="44"/>
+              <preferredSize width="120" height="44"/>
               <text value="Clear"/>
               <toolTipText value="Clear all status"/>
             </properties>
